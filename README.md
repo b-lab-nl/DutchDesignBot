@@ -21,7 +21,7 @@ prompts:
   system: Lorem ipsum
 ```
 
-The _level of suprise_ of the model can be done in several ways:
+The _level of surprise_ of the model can be done in several ways:
 - 'ask it': _are you surprised by the response, please indicate how suprised you are by select one of N surprise levels..._
 - 'measure it': take document embeddings of the answers it does expect, and extract the distance from the users answer -> this translate this to a score requires the availability of positives/negatives.
 - simulate it: in principle we can force the model to give a certain answer, which would be the answer of the user. We can then compare the total relative probability of the generated tokens with
