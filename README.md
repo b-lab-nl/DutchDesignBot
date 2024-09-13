@@ -35,7 +35,8 @@ This over-exploitation leads to dangerous zoonoses like Covid19, it can lead to 
 """
 SOLUTION_SUGGESTION = "eat less animals"
 
-base_template = f"We are about to embark on a mission to save the planet from a grave danger. We are to solve the {QUEST_PROBLEM} crisis.
-The {QUEST_PROBLEM} crisis is described as follows: {QUEST_PROBLEM_DESCRIPTION}".
-Our proposed solution is: {SOLUTION_SUGGESTION}
+base_template = f"""We are about to embark on a mission to save the planet from a grave danger. We are to solve the {QUEST_PROBLEM} crisis.
+The {QUEST_PROBLEM} crisis is described as follows: {QUEST_PROBLEM_DESCRIPTION}.
+
+Our proposed solution is: {SOLUTION_SUGGESTION}"""
 ```
