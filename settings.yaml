@@ -1,0 +1,11 @@
+port: 1232
+llm:
+  provider: openai
+  model: gpt4o-mini
+tts:
+  provider: elevenlabs
+  voice: david
+stt:
+  provider: whisper
+prompts:
+  system: "Your system prompt here."

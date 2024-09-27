@@ -1,0 +1,17 @@
+/* App.css */
+
+.App {
+    background-color: black;
+    color: #00ff00; /* Matrix green */
+    font-family: 'Courier New', Courier, monospace;
+    text-align: center;
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  .bot-response {
+    margin-top: 20px;
+    font-size: 1.2em;
+  }
+  
+  
