@@ -41,6 +41,7 @@ function BottomCarousel(props) {
     if (manualSolution.trim() !== '') {
       setSelectedSolution(manualSolution);
       setPreFilled(false);
+      setAttemptNumber(prev => prev + 1);
       setShowManualInput(false);
     }
   };

@@ -6,23 +6,48 @@ import sqlite3
 from datetime import datetime
 from dotenv import load_dotenv
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import openai
+from openai import OpenAI
 import base64
-from elevenlabs import generate  # Import generate function
+from elevenlabs.client import ElevenLabs, AsyncElevenLabs
+import logging
+
+# make logger
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
 
 # Load environment variables and settings
-load_dotenv()
-with open('settings.yaml', 'r') as f:
+load_dotenv('../.env')
+with open('../settings.yaml', 'r') as f:
     settings = yaml.safe_load(f)
 
-openai.api_key = os.getenv('LLM_OAI_KEY')
-elevenlabs_api_key = os.getenv('STT_EL_KEY')  # Get ElevenLabs API key
+
+logger.info(f"Setting OpenAI KEY")
+OpenAIClient = OpenAI(api_key=os.getenv('LLM_OAI_KEY'))
+logger.info(f"Setting Elevenlabs KEY")
+ElevenClient = ElevenLabs(api_key=os.getenv('STT_EL_KEY'))  # Get ElevenLabs API key
+
 
 # Initialize FastAPI app
+# Configure CORS
+origins = [
+    "http://localhost:3000",  # Frontend origin
+    # Add other allowed origins if needed
+]
+
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["POST"],
+    allow_headers=["*"],
+)
 
 # Database setup
+logger.info(f"Making SQL Lite")
 conn = sqlite3.connect('answers.db', check_same_thread=False)
 cursor = conn.cursor()
 cursor.execute('''
@@ -47,6 +72,8 @@ class EvaluationRequest(BaseModel):
 @app.post('/api/evaluate')
 def evaluate(request: EvaluationRequest):
     # Store the user's response
+    logger.info(f"Received request: {request}")
+
     cursor.execute('''
         INSERT INTO answers (datetime, challenge, solution, pre_filled)
         VALUES (?, ?, ?, ?)
@@ -78,28 +105,40 @@ def check_originality(solution):
 
 def generate_sarcastic_response(challenge, solution):
     prompt = f"You have selected {challenge} as the problem. Your suggested solution is {solution}.\n\nBot: Oh, how original. Another '{solution}' to solve '{challenge}'. Haven't heard that before."
-    response = openai.Completion.create(
-        engine=settings['llm']['model'],
-        prompt=prompt,
-        max_tokens=50
+    response = OpenAIClient.chat.completions.create(
+        model=settings['llm']['model'],
+        messages=[
+            {"role": "system", "content": settings['llm']['system']},
+            {"role": "user", "content": prompt}
+        ],
+        max_tokens=settings['llm']['max_tokens']
     )
-    return response.choices[0].text.strip()
+    return response.choices[0].message.content.strip()
 
 def generate_positive_response(challenge, solution):
     prompt = f"You have selected {challenge} as the problem. Your suggested solution is {solution}.\n\nBot: Impressive! That's a novel approach to '{challenge}'. Well done!"
-    response = openai.Completion.create(
-        engine=settings['llm']['model'],
-        prompt=prompt,
-        max_tokens=50
+    response = OpenAIClient.chat.completions.create(
+        model=settings['llm']['model'],
+        messages=[
+            {"role": "system", "content": settings['llm']['system']},
+            {"role": "user", "content": prompt}
+        ],
+        max_tokens=settings['llm']['max_tokens']
     )
-    return response.choices[0].text.strip()
+    return response.choices[0].message.content.strip()
 
 def generate_audio(text):
-    audio = generate(
+    audio = ElevenClient.generate(
         text=text,
         voice=settings['tts']['voice'],
-        api_key=elevenlabs_api_key
-    )
+        model=settings['tts']['model']
+        )
+    audio_bytes = b''.join(audio)
     # Encode audio to base64 string
-    audio_base64 = base64.b64encode(audio).decode('utf-8')
+    audio_base64 = base64.b64encode(audio_bytes).decode('utf-8')
     return audio_base64
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=1232)

@@ -1,10 +1,13 @@
 port: 1232
 llm:
   provider: openai
-  model: gpt4o-mini
+  model: gpt-4o-mini
+  system: "You are a funny and sassy AI assistant that helps humans think about solving global problems. Keep it short and succinct."
+  max_tokens: 100
 tts:
   provider: elevenlabs
-  voice: david
+  model: eleven_multilingual_v2
+  voice: Charlotte
 stt:
   provider: whisper
 prompts:

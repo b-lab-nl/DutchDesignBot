@@ -1,12 +1,15 @@
 // App.js
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback} from 'react';
 import TopCarousel from './components/TopCarousel';
 import BottomCarousel from './components/BottomCarousel';
 import LissajousFigure from './components/LissajousFigure';
 import './App.css';
 import axios from 'axios';
 
+const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:1232';
+
+// In App.js
 function App() {
   const [selectedChallenge, setSelectedChallenge] = useState(null);
   const [selectedSolution, setSelectedSolution] = useState(null);
@@ -16,10 +19,11 @@ function App() {
   const [showManualInput, setShowManualInput] = useState(false);
   const [audioSrc, setAudioSrc] = useState(null);
 
-  useEffect(() => {
+
+  const makeApiCall = useCallback(() => {
     if (selectedChallenge && selectedSolution) {
-      // Make API call to backend
-      axios.post('/api/evaluate', {
+      console.log('Making API call');
+      axios.post(`${backendUrl}/api/evaluate`, {
         challenge: selectedChallenge,
         solution: selectedSolution,
         pre_filled: preFilled,
@@ -27,19 +31,23 @@ function App() {
       })
       .then(response => {
         setBotResponse(response.data.bot_response);
-        // Additional handling can be added here
-        // Decode and set audio source
-        const audioBase64 = response.data.audio_base64;
-        const audioURL = `data:audio/mpeg;base64,${audioBase64}`;
-        setAudioSrc(audioURL);
-
-        // Play audio
-        const audio = new Audio(audioURL);
-        audio.play();
+          // Additional handling can be added here
+          // Decode and set audio source
+          const audioBase64 = response.data.audio_base64;
+          const audioURL = `data:audio/mpeg;base64,${audioBase64}`;
+          setAudioSrc(audioURL);
+  
+          // Play audio
+          const audio = new Audio(audioURL);
+          audio.play();
       })
       .catch(error => console.error('Error:', error));
     }
-  }, [selectedChallenge, selectedSolution]);
+  }, [selectedChallenge, selectedSolution, preFilled, attemptNumber]);
+  
+  useEffect(() => {
+    makeApiCall();
+  }, [makeApiCall]);
 
   const reset = () => {
     setSelectedChallenge(null);
@@ -58,6 +66,7 @@ function App() {
       <LissajousFigure
         selectedChallenge={selectedChallenge}
         selectedSolution={selectedSolution}
+        botResponse={botResponse}
       />
       <BottomCarousel
         selectedSolution={selectedSolution}
@@ -69,9 +78,7 @@ function App() {
         attemptNumber={attemptNumber}
         setAttemptNumber={setAttemptNumber}
       />
-      {botResponse && <div className="bot-response">{botResponse}</div>}
-      /* Audio control, optional */
-      {audioSrc && <audio src={audioSrc} controls />}
+      {/* {botResponse && <div className="bot-response">{botResponse}</div>} */}
     </div>
   );
 }

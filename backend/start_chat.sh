@@ -9,4 +9,4 @@ while [[ "$#" -gt 0 ]]; do
 done
 
 PORT=$(grep 'port' "$CONFIG_FILE" | awk '{print $2}')
-uvicorn main:app --reload --port $PORT
+uvicorn main:app --reload --port $PORT --log-level debug

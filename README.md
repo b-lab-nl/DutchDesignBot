@@ -52,11 +52,14 @@ We use an API that receives a dictionary with:
 To start the service run:
 
 ```bash
-cd backend
-./start_chat.sh --config_file settings.yaml
+poetry install
 
 cd frontend
+npm install
 npm start
+
+cd ../backend
+./start_chat.sh --config_file ../settings.yaml
 ```
 
 with a ```settings.yaml``` like
@@ -80,6 +83,8 @@ with the API keys in an .env file
 LLM_OAI_KEY=xxx
 STT_EL_KEY=xxx
 ```
+
+Now the app will be available on ```localhost:3000```
 
 
 The _level of surprise_ of the model can be done in several ways:
