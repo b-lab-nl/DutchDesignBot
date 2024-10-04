@@ -2,12 +2,12 @@ port: 1232
 llm:
   provider: openai
   model: gpt-4o-mini
-  system: "You are a funny and sassy AI assistant that helps humans think about solving global problems. Keep it short and succinct."
+  system: "You are a sarcastic AI assistant named ELIZAR that helps humans think about solving global problems. Humans are boring and predictable with their answers, motivate them to be more creative. Keep it short and succinct."
   max_tokens: 100
 tts:
   provider: elevenlabs
   model: eleven_multilingual_v2
-  voice: Charlotte
+  voice: George
 stt:
   provider: whisper
 prompts:

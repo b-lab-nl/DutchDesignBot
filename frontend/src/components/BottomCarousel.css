@@ -1,73 +1,100 @@
 /* BottomCarousel.css */
-
+.bottom-carousel-div {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
 .bottom-carousel {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-  background-color: black;
-  padding: 10px 0;
+    position: relative;
+    width: 300px;
+    height: 300px;
+    overflow: hidden;
+    background-color: black;
+    padding: 10px 0;
+    display: none;
 }
-
-.carousel-content {
-  display: inline-block;
-  white-space: nowrap;
-  animation: scroll 15s linear infinite;
+.bottom-carousel.active {
+    display: block;
 }
-
-.carousel-item {
-  display: inline-block;
-  padding: 10px 20px;
-  color: #00ff00; /* Matrix green */
-  font-family: 'Courier New', Courier, monospace;
-  cursor: pointer;
-  transition: transform 0.2s, text-shadow 0.2s;
+.carousel-content-bottom {
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
-
-.carousel-item:hover {
-  transform: scale(1.1);
-  text-shadow: 0 0 10px #00ff00;
-  animation-play-state: paused; /* Pause scrolling on hover */
+.carousel-scrolling-content {
+    flex-grow: 1;
+    overflow: hidden;
+    position: relative;
+    animation: scroll-bottom 4s linear infinite;
 }
-
-.carousel-item.selected {
-  border: 1px solid #00ff00;
-  box-shadow: 0 0 10px #00ff00;
+.carousel-item-bottom {
+    display: block;
+    padding: 10px 20px;
+    color: #00ff00; /* Matrix green */
+    font-family: "Courier New", Courier, monospace;
+    cursor: pointer;
+    transition:
+        transform 0.2s,
+        text-shadow 0.2s;
 }
-
+.carousel-item-bottom:hover,
+.carousel-item-bottom:focus {
+    transform: scale(1.3);
+    text-shadow: 0 0 10px #00ff00;
+    outline: none; /* Remove default focus outline */
+}
+.carousel-item-bottom.selected {
+    box-shadow: 0 0 10px #00ff00;
+    outline: none; /* Remove default focus outline */
+}
+.carousel-item-bottom.fixed:hover,
+.carousel-item-bottom.fixed:focus,
+.carousel-item-bottom.fixed.selected {
+    transform: none; /* Prevent scaling for fixed item */
+}
+.bottom-carousel:hover .carousel-scrolling-content,
+.carousel-scrolling-content:focus-within .carousel-scrolling-content,
+.carousel-item-bottom.selected ~ .carousel-scrolling-content {
+    animation-play-state: paused;
+}
 /* Manual input styling */
 .manual-input {
-  display: inline-block;
-  margin-left: 20px;
-  vertical-align: top;
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: 10px;
+    background-color: black;
+    z-index: 99;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-
 .manual-input input {
-  background-color: black;
-  color: #00ff00;
-  border: 1px solid #00ff00;
-  padding: 5px;
-  font-family: 'Courier New', Courier, monospace;
+    background-color: black;
+    color: #00ff00;
+    border: 1px solid #00ff00;
+    padding: 5px;
+    font-family: "Courier New", Courier, monospace;
+    flex-grow: 1;
+    margin-right: 5px;
 }
-
 .manual-input button {
-  background-color: #00ff00;
-  color: black;
-  border: none;
-  padding: 5px 10px;
-  cursor: pointer;
-  margin-left: 5px;
+    background-color: #00ff00;
+    color: black;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-family: "Courier New", Courier, monospace;
 }
-
 .manual-input button:hover {
-  background-color: #00cc00;
+    background-color: #00cc00;
 }
-
 /* Scrolling animation */
-@keyframes scroll {
-  0% {
-    transform: translateX(0%);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
+@keyframes scroll-bottom {
+    0% {
+        transform: translateY(0%);
+    }
+    100% {
+        transform: translateY(-50%);
+    }
 }

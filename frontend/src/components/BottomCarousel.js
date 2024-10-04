@@ -1,74 +1,86 @@
-// BottomCarousel.js
+import React, { useState } from "react";
+import "./BottomCarousel.css";
 
-import React, { useState } from 'react';
-import './BottomCarousel.css';
-
-const solutions = [
-  'Invest in Renewables',
-  'Promote Education',
-  'Support Local Farmers',
-  'Implement AI Ethics',
-  'Strengthen Privacy Laws',
-  'Fill in your idea',
+const base_solutions = [
+  "Fill in your own idea",
+  "Invest in Renewables",
+  "Promote Education",
+  "More regulations",
+  "Eat less meat",
+  "Recycle more",
 ];
+
+const solutions = [...base_solutions, ...base_solutions, ...base_solutions];
 
 function BottomCarousel(props) {
   const {
+    selectedChallenge,
     selectedSolution,
     setSelectedSolution,
     preFilled,
     setPreFilled,
     showManualInput,
     setShowManualInput,
-    attemptNumber,
-    setAttemptNumber,
+    canSubmitNewSolution,
   } = props;
 
-  const [manualSolution, setManualSolution] = useState('');
+  const [manualSolution, setManualSolution] = useState("");
 
-  const handleSolutionClick = solution => {
-    if (solution === 'Fill in your idea') {
-      setShowManualInput(true);
-      setPreFilled(false);
-    } else {
-      setSelectedSolution(solution);
-      setPreFilled(true);
-      setAttemptNumber(prev => prev + 1);
+  const handleSolutionClick = (solution) => {
+    if (canSubmitNewSolution) {
+      if (solution === "Fill in your own idea") {
+        setShowManualInput(true);
+        setPreFilled(false);
+      } else {
+        setSelectedSolution(solution);
+        setPreFilled(true);
+      }
     }
   };
 
   const handleManualSubmit = () => {
-    if (manualSolution.trim() !== '') {
+    if (canSubmitNewSolution && manualSolution.trim() !== "") {
       setSelectedSolution(manualSolution);
       setPreFilled(false);
-      setAttemptNumber(prev => prev + 1);
       setShowManualInput(false);
     }
   };
 
   return (
-    <div className="bottom-carousel">
-      <div className="carousel-content">
-        {solutions.concat(solutions).map((solution, index) => (
-          <div
-            key={index}
-            className={`carousel-item ${selectedSolution === solution ? 'selected' : ''}`}
-            onClick={() => handleSolutionClick(solution)}
-          >
-            {solution}
+    <div className="bottom-carousel-div">
+      <div className="bottom-carousel active">
+        <div className="carousel-content-bottom">
+          {showManualInput && (
+            <div className="manual-input">
+              <input
+                type="text"
+                value={manualSolution}
+                onChange={(e) => setManualSolution(e.target.value)}
+                placeholder="Enter your solution"
+                disabled={!canSubmitNewSolution}
+              />
+              <button
+                onClick={handleManualSubmit}
+                disabled={!canSubmitNewSolution}
+              >
+                I dare you..
+              </button>
+            </div>
+          )}
+          <div className="carousel-scrolling-content">
+            {solutions.concat(solutions).map((solution, index) => (
+              <div
+                key={index}
+                className={`carousel-item-bottom ${
+                  selectedSolution === solution ? "selected" : ""
+                } ${!canSubmitNewSolution ? "disabled" : ""}`}
+                onClick={() => handleSolutionClick(solution)}
+              >
+                {solution}
+              </div>
+            ))}
           </div>
-        ))}
-        {showManualInput && (
-          <div className="manual-input">
-            <input
-              type="text"
-              value={manualSolution}
-              onChange={e => setManualSolution(e.target.value)}
-              placeholder="Enter your solution"
-            />
-            <button onClick={handleManualSubmit}>Submit</button>
-          </div>
-        )}
+        </div>
       </div>
     </div>
   );
