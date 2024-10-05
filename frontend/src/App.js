@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import TopCarousel from "./components/TopCarousel";
 import BottomCarousel from "./components/BottomCarousel";
-import LissajousFigure from "./components/LissajousFigure";
+import Chatbox from "./components/Chatbox";
 import BoredEmoticons from "./components/BoredEmoticons";
 import "./App.css";
 import axios from "axios";
@@ -23,7 +23,21 @@ function App() {
   const [lastSelectedSolution, setLastSelectedSolution] = useState(null);
 
   const makeApiCall = useCallback(() => {
-    if (selectedChallenge) {
+    console.log("Challenge:", selectedChallenge);
+    console.log("Solution:", selectedSolution);
+
+    if (selectedChallenge && selectedSolution===null){
+      console.log("No solution selected yet");
+      // 
+      setBotResponse("Please select a solution to proceed");
+      setShowBottomCarousel(true);
+    }
+    else if (selectedChallenge  && selectedSolution===""){
+      setBotResponse("You will actually need to fill in text here..like, with the keyboard..");
+      
+    }else if (selectedChallenge  && selectedSolution!==""){
+      // if selectedSolution===lastSelectedSolution, set isBored to true
+
       console.log("Making API call");
       setIsLoading(true);
       setBotResponse("");
@@ -46,6 +60,10 @@ function App() {
 
           const audio = new Audio(audioURL);
           audio.play();
+
+          // TODO: if response.data.original==true then give party emoji screensaver for 10 seconds, 
+          // and play party music for 10 seconds, then reset screen and attemptNumber to 0
+
         })
         .catch((error) => console.error("Error:", error))
         .finally(() => {
@@ -91,12 +109,14 @@ function App() {
         selectedChallenge={selectedChallenge}
         setSelectedChallenge={handleChallengeSelect}
       />
-      <LissajousFigure
+      <div className="topSeparator"> </div>
+      <Chatbox
         selectedChallenge={selectedChallenge}
         selectedSolution={selectedSolution}
         botResponse={botResponse}
         isLoading={isLoading}
       />
+      <div className="bottomSeparator">   </div>
       {showBottomCarousel && (
         <BottomCarousel
           selectedChallenge={selectedChallenge}
@@ -107,6 +127,7 @@ function App() {
           showManualInput={showManualInput}
           setShowManualInput={setShowManualInput}
           canSubmitNewSolution={canSubmitNewSolution}
+          attemptNumber={attemptNumber}
         />
       )}
       {isBored && <BoredEmoticons />}

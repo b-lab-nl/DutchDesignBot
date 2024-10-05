@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import "./LissajousFigure.css";
+import "./Chatbox.css";
 
-function LissajousFigure({
+function chatbox({
   selectedChallenge,
   selectedSolution,
   botResponse,
@@ -23,7 +23,7 @@ function LissajousFigure({
     let snakeY = canvas.height / 2;
     let snakeAngle = 0;
     const snakeSpeed = 2;
-    const trailOpacity = 0.3;
+    const trailOpacity = 1.;
     let dirX = 0;
     let dirY = 0;
     let stepCount = 0;
@@ -59,7 +59,18 @@ function LissajousFigure({
         dirY = Math.round(Math.random());
         randStepInterval = Math.floor(Math.random() * 100) + 50;
       }
-      if (stepCount > 100_000) stepCount = 0;
+      if (stepCount % (2 * randStepInterval) === 0) {
+        if (Math.round(Math.random()) === 1) {
+            dirY = 1 / 2; // Move horizontally
+        } else {
+            dirX = 1 / 2; // Move vertically
+        }
+    }
+
+      if (stepCount > 250_000){
+        stepCount = 0;
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canva
+      }
 
       const newX = snakeX + (1 / 2 - dirX) * snakeSpeed;
       const newY = snakeY + (1 / 2 - dirY) * snakeSpeed;
@@ -90,11 +101,12 @@ function LissajousFigure({
     };
 
     const animate = () => {
-      if (!selectedChallenge) {
-        drawSnake();
+      if (!botResponse) {
+      drawSnake();
       } else {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
       }
+
       animationFrameId = requestAnimationFrame(animate);
     };
 
@@ -116,9 +128,11 @@ function LissajousFigure({
     }
   }, [isLoading, canvasContext]);
 
-  const wrapperClassName = botResponse
-    ? "lissajous-canvas-wrapper expanded"
-    : "lissajous-canvas-wrapper";
+  const wrapperClassName = (selectedChallenge || selectedSolution)
+  ? "chatbox-canvas-wrapper selected"
+  : botResponse
+  ? "chatbox-canvas-wrapper expanded"
+  : "chatbox-canvas-wrapper";
 
   return (
     <div className={wrapperClassName}>
@@ -126,11 +140,11 @@ function LissajousFigure({
         ref={canvasRef}
         width={600}
         height={400}
-        className="lissajous-canvas"
+        className="chatbox-canvas"
       />
       {botResponse && <div className="bot-response-overlay">{botResponse}</div>}
     </div>
   );
 }
 
-export default LissajousFigure;
+export default chatbox;

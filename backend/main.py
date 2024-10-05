@@ -5,7 +5,7 @@ import yaml
 import sqlite3
 from datetime import datetime
 from dotenv import load_dotenv
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from openai import OpenAI
@@ -34,7 +34,7 @@ ElevenClient = ElevenLabs(api_key=os.getenv('STT_EL_KEY'))  # Get ElevenLabs API
 # Configure CORS
 origins = [
     "http://localhost:3000",  # Frontend origin
-    # Add other allowed origins if needed
+     "http://localhost:4000"  # Scoreboard origin
 ]
 
 app = FastAPI()
@@ -61,6 +61,11 @@ cursor.execute('''
 ''')
 conn.commit()
 
+
+class ScoreResponse(BaseModel):
+    human_score: int
+    bot_score: int
+
 # Request model
 class EvaluationRequest(BaseModel):
     challenge: str
@@ -74,25 +79,62 @@ def evaluate(request: EvaluationRequest):
     # Store the user's response
     logger.info(f"Received request: {request}")
 
-    cursor.execute('''
-        INSERT INTO answers (datetime, challenge, solution, pre_filled)
-        VALUES (?, ?, ?, ?)
-    ''', (datetime.now().isoformat(), request.challenge, request.solution, 'yes' if request.pre_filled else 'no'))
-    conn.commit()
-
     # Determine originality
     originality = check_originality(request.solution)
 
     # Generate bot response
     if request.pre_filled or not originality:
-        bot_response = generate_sarcastic_response(request.challenge, request.solution)
+        try:
+            bot_response = generate_sarcastic_response(request.challenge, request.solution)
+        except Exception as e:
+            logger.error(f"Error in generating sarcastic response: {e}")
+            bot_response = f"Seriously, {request.solution}?? Are you even trying?"
+        human_score = 0
+        bot_score = 10
+        original = False
     else:
-        bot_response = generate_positive_response(request.challenge, request.solution)
+        try:
+            bot_response = generate_positive_response(request.challenge, request.solution)
+        except Exception as e:
+            logger.error(f"Error in generating positive response: {e}")
+            bot_response = f"Wow, {request.solution} is such a great idea!"
+        human_score = 10
+        bot_score = 0
+        original = True
+
+    cursor.execute('''
+        INSERT INTO answers (datetime, challenge, solution, pre_filled, attempt_number, bot_response, human_score, bot_score)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    ''', (datetime.now().isoformat(), request.challenge, request.solution, 'yes' if request.pre_filled else 'no', 
+          request.attempt_number, bot_response, human_score, bot_score))
+    conn.commit()
 
     # Generate audio using ElevenLabs
     audio_base64 = generate_audio(bot_response)
 
-    return {'bot_response': bot_response, 'audio_base64': audio_base64}
+    return {'bot_response': bot_response, 'audio_base64': audio_base64, 'original': original}
+
+@app.post("/api/score", response_model=ScoreResponse)
+async def score():
+    """Returns the sum of the human and bot scores"""
+    try:
+        cursor.execute('SELECT SUM(human_score) as human_total, SUM(bot_score) as bot_total FROM answers')
+        result = cursor.fetchone()
+        
+        if result is None:
+            raise HTTPException(status_code=404, detail="No scores found")
+        
+        human_total, bot_total = result
+        
+        return ScoreResponse(
+            human_score=int(human_total) if human_total is not None else 0,
+            bot_score=int(bot_total) if bot_total is not None else 0
+        )
+    except Exception as e:
+        print(f"Error calculating scores: {str(e)}")
+        raise HTTPException(status_code=500, detail="An error occurred while calculating scores")
+
+
 
 def check_originality(solution):
     # Check for previous solutions in the database
@@ -104,11 +146,11 @@ def check_originality(solution):
     return True
 
 def generate_sarcastic_response(challenge, solution):
-    prompt = f"You have selected {challenge} as the problem. Your suggested solution is {solution}.\n\nBot: Oh, how original. Another '{solution}' to solve '{challenge}'. Haven't heard that before."
+    prompt = f"The human has selected {challenge} as the world problem. His/her boring and predictable suggested solution is {solution}."
     response = OpenAIClient.chat.completions.create(
         model=settings['llm']['model'],
         messages=[
-            {"role": "system", "content": settings['llm']['system']},
+            {"role": "system", "content": settings['llm']['system_sarcastic']},
             {"role": "user", "content": prompt}
         ],
         max_tokens=settings['llm']['max_tokens']
@@ -116,11 +158,11 @@ def generate_sarcastic_response(challenge, solution):
     return response.choices[0].message.content.strip()
 
 def generate_positive_response(challenge, solution):
-    prompt = f"You have selected {challenge} as the problem. Your suggested solution is {solution}.\n\nBot: Impressive! That's a novel approach to '{challenge}'. Well done!"
+    prompt = f"The human has selected {challenge} as the problem. His/her suggested solution is {solution}, which is pretty creative!"
     response = OpenAIClient.chat.completions.create(
         model=settings['llm']['model'],
         messages=[
-            {"role": "system", "content": settings['llm']['system']},
+            {"role": "system", "content": settings['llm']['system_positive']},
             {"role": "user", "content": prompt}
         ],
         max_tokens=settings['llm']['max_tokens']
@@ -131,6 +173,7 @@ def generate_audio(text):
     audio = ElevenClient.generate(
         text=text,
         voice=settings['tts']['voice'],
+        voice_settings=settings['tts']['voice_settings'],
         model=settings['tts']['model']
         )
     audio_bytes = b''.join(audio)

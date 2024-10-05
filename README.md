@@ -58,6 +58,10 @@ cd frontend
 npm install
 npm start
 
+cd ../scoreboard
+npm install 
+npm start
+
 cd ../backend
 ./start_chat.sh --config_file ../settings.yaml
 ```
@@ -106,3 +110,5 @@ The {QUEST_PROBLEM} crisis is described as follows: {QUEST_PROBLEM_DESCRIPTION}.
 
 Our proposed solution is: {SOLUTION_SUGGESTION}"""
 ```
+
+The interface runs on ```localhost:3000```, the scoreboard runs on ```localhost:4000```
