@@ -29,7 +29,11 @@ function App() {
     if (selectedChallenge && selectedSolution===null){
       console.log("No solution selected yet");
       // 
-      setBotResponse("Please select a solution to proceed");
+      // 
+      setBotResponse(`Algy\n 
+        Hi I am Algy. What a great choice. What solutions \
+        do you have in mind to solve some of the issues related to\
+        ${selectedChallenge}?`);
       setShowBottomCarousel(true);
     }
     else if (selectedChallenge  && selectedSolution===""){
@@ -105,6 +109,7 @@ function App() {
 
   return (
     <div className="App">
+      <div className="Title">Let's save the world with tech</div>
       <TopCarousel
         selectedChallenge={selectedChallenge}
         setSelectedChallenge={handleChallengeSelect}
@@ -131,6 +136,7 @@ function App() {
         />
       )}
       {isBored && <BoredEmoticons />}
+      <div className="FooterBar">Hint, put on the headphones 🎧</div>
     </div>
   );
 }

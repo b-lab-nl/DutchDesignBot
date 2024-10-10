@@ -143,8 +143,8 @@ function chatbox({
         className="chatbox-canvas"
       />
       {botResponse && <div className="bot-response-overlay">{botResponse}</div>}
+      {selectedSolution && <div className="human-response-overlay">{selectedSolution}</div>}
     </div>
   );
 }
-
 export default chatbox;
