@@ -25,7 +25,7 @@ function TopCarousel({ selectedChallenge, setSelectedChallenge }) {
             className={`carousel-item ${selectedChallenge === challenge ? 'selected' : ''}`}
             onClick={() => setSelectedChallenge(challenge)}
           >
-            {challenge}
+            <span className='challengeText'>{challenge}</span>
           </div>
         ))}
       </div>

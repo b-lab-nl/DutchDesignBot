@@ -1,12 +1,15 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef} from "react";
 import TopCarousel from "./components/TopCarousel";
 import BottomCarousel from "./components/BottomCarousel";
 import Chatbox from "./components/Chatbox";
 import BoredEmoticons from "./components/BoredEmoticons";
+import SolutionSelection from './components/SolutionSelection';
+
 import "./App.css";
 import axios from "axios";
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:1232";
+const INACTIVITY_TIMEOUT = 60000; // 30 seconds in milliseconds
 
 function App() {
   const [selectedChallenge, setSelectedChallenge] = useState(null);
@@ -21,7 +24,39 @@ function App() {
   const [canSubmitNewSolution, setCanSubmitNewSolution] = useState(true);
   const [isBored, setIsBored] = useState(false);
   const [lastSelectedSolution, setLastSelectedSolution] = useState(null);
+ 
 
+  const audioBoring = new Audio("/assets/boring.wav");
+  const audioOG = new Audio("/assets/og.wav");
+
+  // Reference to hold the inactivity timer ID
+  const inactivityTimerRef = useRef(null);
+
+  // Function to reset the inactivity timer
+  const resetInactivityTimer = useCallback(() => {
+    // Clear any existing timer
+    if (inactivityTimerRef.current) {
+      clearTimeout(inactivityTimerRef.current);
+    }
+    // Set a new timer
+    inactivityTimerRef.current = setTimeout(() => {
+      window.location.reload();
+    }, INACTIVITY_TIMEOUT);
+  }, []);
+
+  // Effect hook to monitor changes and reset the timer
+  useEffect(() => {
+    resetInactivityTimer();
+
+    // Cleanup function to clear the timer when the component unmounts
+    return () => {
+      if (inactivityTimerRef.current) {
+        clearTimeout(inactivityTimerRef.current);
+      }
+    };
+  }, [selectedChallenge, selectedSolution, resetInactivityTimer]);
+
+    
   const makeApiCall = useCallback(() => {
     console.log("Challenge:", selectedChallenge);
     console.log("Solution:", selectedSolution);
@@ -65,8 +100,15 @@ function App() {
           const audio = new Audio(audioURL);
           audio.play();
 
+          // TODO: if response.data.original==false then give bored emoji screensaver for 10 seconds,  
+          // and play bored music for 10 seconds, then reset screen and attemptNumber to 0
+          if (!response.data.original) {
+            audioBoring.play();
+          }else{
           // TODO: if response.data.original==true then give party emoji screensaver for 10 seconds, 
-          // and play party music for 10 seconds, then reset screen and attemptNumber to 0
+          // and play glorious music, then restart the session            
+            audioOG.play();
+        }
 
         })
         .catch((error) => console.error("Error:", error))
@@ -108,12 +150,14 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <div className={`App ${(showManualInput || attemptNumber>=2) ? 'manual-input-active' : ''}`}>
       <div className="Title">Let's save the world with tech</div>
+      {selectedChallenge==null && (
       <TopCarousel
         selectedChallenge={selectedChallenge}
         setSelectedChallenge={handleChallengeSelect}
       />
+      )}
       <div className="topSeparator"> </div>
       <Chatbox
         selectedChallenge={selectedChallenge}

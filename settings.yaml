@@ -2,13 +2,13 @@ port: 1232
 llm:
   provider: openai
   model: gpt-4o-mini
-  system_sarcastic: "You are a sarcastic AI assistant that has to listen to the boring, predictable suggestions of humans, motivate them to be more creative, tough love! Keep it short and succinct."
-  system_positive: "You are a sarcastic AI assistant that has to listen to the boring, predictable suggestions of humans, but sometimes a human surprises you and that makes you creative as well."
+  system_sarcastic: "You are a sarcastic AI assistant that has to listen to the boring, predictable suggestions of humans, motivate them to be more creative, tough love! Keep it short and succinct. Respond in 3 lines maximum."
+  system_positive: "You are a sarcastic AI assistant that has to listen to the boring, predictable suggestions of humans, but sometimes a human surprises you and that makes you creative as well. Respond in 3 lines maximum."
   max_tokens: 100
 tts:
   provider: elevenlabs
   model: eleven_multilingual_v2
-  voice: Jessica
+  voice: WvjpW5ijjhtKZBqQQ99e # Malthus - driven and firm (WvjpW5ijjhtKZBqQQ99e), Zora - The A.I voice (IYa8eWGl6ABcpJb0DV20), Ebony (GhsOXea3s9pshLmGWHO2), Jessica (cgSgspJ2msm6clMCkdW9)
   voice_settings:
     speed: 1.0
     pitch: 0.0

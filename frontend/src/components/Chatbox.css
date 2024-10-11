@@ -11,12 +11,12 @@
 
 .chatbox-canvas-wrapper.selected {
     /* animation: pulse-glow 1.5s infinite; */
-    height:900px;
+    max-height:900px;
 }
 
 .chatbox-canvas-wrapper.expanded {
     width: 900px; /* Expanded width when botResponse is present */
-    height: 900px;
+    max-height: 600px;
     border: 1px solid #2bff00;
 }
 
@@ -35,14 +35,14 @@
     max-height: 80%;
     border: rgba(48, 154, 64, 0.6);
     border-radius: 10%;
-    color: #00ff00;
-    font-family: "Courier New", Courier, monospace;
+    color: #000000;
+    font-family: 'Inter', 'Lora', monospace;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: left;
     padding: 10px;
-    background-color: rgba(53, 83, 15, 0.6);
+    background-color: rgba(208, 226, 185, 0.6);
     font-size: 1.4em;
     overflow: hidden;
   }
@@ -54,15 +54,15 @@
     max-width: 60%;
     max-height:60;
     height: 200px;
-    border: rgba(221, 234, 223, 0.6);
+    border: rgba(48, 154, 64, 0.6);
     border-radius: 10%;
     color: #000000;
-    font-family: "Courier New", Courier, monospace;
+    font-family: 'Inter', 'Lora', monospace;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 10px;
-    background-color: rgba(221, 234, 223, 0.6);
+    background-color: rgba(208, 226, 185, 0.6);
     font-size: 1.4em;
     overflow: hidden;
   }

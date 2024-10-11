@@ -3,7 +3,7 @@ import './App.css';
 
 const EMOJIS = {
   human: ['🎉', '🎊', '🥳', '🪅', '🍾'],
-  bot: ['😴', '🥱', '💤', '😪', '🛌']
+  bot: ['😴', '🥱', '💤']
 };
 
 const EmojiRain = ({ type }) => {
@@ -62,6 +62,8 @@ const App = () => {
           if (fetchedScores.human > prevScores.human) {
             setShowHumanEmojis(true);
             setTimeout(() => setShowHumanEmojis(false), 15000);
+            // TODO: change background color for .scoreboard to #A2B0FE
+
           }
           if (fetchedScores.bot > prevScores.bot) {
             setShowBotEmojis(true);
@@ -86,19 +88,23 @@ const App = () => {
     <div className="App">
       {showHumanEmojis && <EmojiRain type="human" />}
       {showBotEmojis && <EmojiRain type="bot" />}
-      <div className="scoreboard">
-        <h1>Scoreboard</h1>
+      <div className={`scoreboard ${showHumanEmojis ? 'party' : ''}`}>
+        <h1>Let's save the world with tech</h1>
         {loading && <p>Loading scores...</p>}
         {error && <p className="error">{error}</p>}
         <div className="scores">
-          <div className="score-row">
-            <span>HUMANS</span>
-            <span>{scores.human}</span>
-          </div>
-          <div className="score-row">
-            <span>ALGORITHM</span>
-            <span>{scores.bot}</span>
-          </div>
+            <div className="score-item">
+              <span>HUMANS</span>
+              <div className="score-human">            
+                {scores.human}
+              </div>
+            </div>
+            <div className="score-item">
+              <span>TECH</span>
+              <div className="score-bot">  
+                {scores.bot}
+              </div>
+            </div>
         </div>
       </div>
     </div>

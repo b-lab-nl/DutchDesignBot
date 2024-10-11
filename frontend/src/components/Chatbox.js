@@ -102,7 +102,8 @@ function chatbox({
 
     const animate = () => {
       if (!botResponse) {
-      drawSnake();
+      //drawSnake();
+      
       } else {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
       }

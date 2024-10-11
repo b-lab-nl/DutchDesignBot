@@ -6,33 +6,39 @@
 }
 .bottom-carousel {
     position: relative;
-    width: 300px;
-    height: 300px;
+    width: 900px;
+    max-height: 600px;
     overflow: hidden;
-    background-color: black;
+    background-color: #2BB673;
     padding: 10px 0;
     display: none;
+    
 }
 .bottom-carousel.active {
     display: block;
+    transition: background-color 0.3s ease;
+}
+.bottom-carousel.active.manual-input-active {
+    background-color: #A2B0FE;
 }
 .carousel-content-bottom {
     position: relative;
     height: 100%;
     display: flex;
     flex-direction: column;
-}
-.carousel-scrolling-content {
-    flex-grow: 1;
-    overflow: hidden;
-    position: relative;
-    animation: scroll-bottom 4s linear infinite;
+    justify-content: center;
+    align-items: center;
 }
 .carousel-item-bottom {
     display: block;
-    padding: 10px 20px;
-    color: #00ff00; /* Matrix green */
-    font-family: "Courier New", Courier, monospace;
+    padding: 0px 20px;
+    background-color: azure;
+    border-radius: 15px;
+    width: 600px;
+    margin: 10px;
+    color: #000000; /* Matrix green */
+    font-family: "Space Grotesk";
+    font-size: 58px;
     cursor: pointer;
     transition:
         transform 0.2s,
@@ -40,12 +46,13 @@
 }
 .carousel-item-bottom:hover,
 .carousel-item-bottom:focus {
-    transform: scale(1.3);
-    text-shadow: 0 0 10px #00ff00;
+    background-color: #D9FFA1;
+    transform: scale(1.1);
+    text-shadow: 0 0 10px #000000;
     outline: none; /* Remove default focus outline */
 }
 .carousel-item-bottom.selected {
-    box-shadow: 0 0 10px #00ff00;
+    box-shadow: 0 0 10px #000000;
     outline: none; /* Remove default focus outline */
 }
 .carousel-item-bottom.fixed:hover,
@@ -53,48 +60,45 @@
 .carousel-item-bottom.fixed.selected {
     transform: none; /* Prevent scaling for fixed item */
 }
-.bottom-carousel:hover .carousel-scrolling-content,
-.carousel-scrolling-content:focus-within .carousel-scrolling-content,
-.carousel-item-bottom.selected ~ .carousel-scrolling-content {
-    animation-play-state: paused;
+.carousel-item-bottom.button:hover{
+    background-color: #9F0;
 }
+
 /* Manual input styling */
 .manual-input {
-    width: 100%;
-    max-width: 300px;
-    margin-bottom: 10px;
-    background-color: black;
+    width: 600px;
+    margin-bottom: 0px;
+    background-color: #A2B0FE;
     z-index: 99;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 .manual-input input {
-    background-color: black;
-    color: #00ff00;
-    border: 1px solid #00ff00;
-    padding: 5px;
-    font-family: "Courier New", Courier, monospace;
+    background-color: #A2B0FE;
+    color: #000000;
+    border: 2px solid #000000;
+    border-radius: 10px;
+    padding: 0px;
+    font-family: "Space Grotesk";
+    font-size:40px;
     flex-grow: 1;
     margin-right: 5px;
 }
 .manual-input button {
-    background-color: #00ff00;
+    background-color: #ffffff;
     color: black;
     border: none;
-    padding: 5px 10px;
+    padding: 0p;
     cursor: pointer;
-    font-family: "Courier New", Courier, monospace;
+    font-family: "Space Grotesk";
 }
-.manual-input button:hover {
-    background-color: #00cc00;
-}
-/* Scrolling animation */
-@keyframes scroll-bottom {
-    0% {
-        transform: translateY(0%);
-    }
-    100% {
-        transform: translateY(-50%);
-    }
-}
+
+.manual-input-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  

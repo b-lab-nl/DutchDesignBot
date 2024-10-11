@@ -1,16 +1,13 @@
 import React, { useState } from "react";
+import SolutionSelection from './SolutionSelection';
 import "./BottomCarousel.css";
 
-const base_solutions = [
-  "Fill in your own idea",
-  "Invest in Renewables",
-  "Promote Education",
-  "More regulations",
-  "Eat less meat",
-  "Recycle more",
+const base_solutions = [  
+  "Blockchain",
+  "AI", 
+  "Increase awareness",
+  "Fill in your own idea"
 ];
-
-const solutions = [...base_solutions, ...base_solutions, ...base_solutions];
 
 // TODO: make a chat layout, where the response of the bot is displayed in a chat bubble, as if coming from a bot named ELIZA, and the user's input is displayed in a chat bubble as if coming from a user named HUMAN, the human response is the selectedSolution, and the selectedChallenge
 
@@ -52,58 +49,21 @@ function BottomCarousel(props) {
 
   return (
     <div className="bottom-carousel-div">
-      {attemptNumber >= 3 ? (
-        <div className="manual-input">
-          <input
-            type="text"
-            value={manualSolution}
-            onChange={(e) => setManualSolution(e.target.value)}
-            placeholder="Enter your solution"
-            disabled={!canSubmitNewSolution}
-          />
-          <button
-            onClick={handleManualSubmit}
-            disabled={!canSubmitNewSolution}
-          >
-            I dare you..
-          </button>
-        </div>
-      ) : (
-        <div className="bottom-carousel active">
+      <div className={`bottom-carousel active ${(showManualInput || attemptNumber>=2)? 'manual-input-active' : ''}`}>
           <div className="carousel-content-bottom">
-            {showManualInput && (
-              <div className="manual-input">
-                <input
-                  type="text"
-                  value={manualSolution}
-                  onChange={(e) => setManualSolution(e.target.value)}
-                  placeholder="Enter your solution"
-                  disabled={!canSubmitNewSolution}
-                />
-                <button
-                  onClick={handleManualSubmit}
-                  disabled={!canSubmitNewSolution}
-                >
-                  I dare you..
-                </button>
-              </div>
-            )}
-            <div className="carousel-scrolling-content">
-              {solutions.concat(solutions).map((solution, index) => (
-                <div
-                  key={index}
-                  className={`carousel-item-bottom ${
-                    selectedSolution === solution ? "selected" : ""
-                  } ${!canSubmitNewSolution ? "disabled" : ""}`}
-                  onClick={() => handleSolutionClick(solution)}
-                >
-                  {solution}
-                </div>
-              ))}
-            </div>
+          <SolutionSelection
+            attemptNumber={attemptNumber}
+            showManualInput={showManualInput}
+            manualSolution={manualSolution}
+            setManualSolution={setManualSolution}
+            canSubmitNewSolution={canSubmitNewSolution}
+            handleManualSubmit={handleManualSubmit}
+            base_solutions={base_solutions}
+            selectedSolution={selectedSolution}
+            handleSolutionClick={handleSolutionClick}
+          /> 
           </div>
         </div>
-      )}
     </div>
   );
 }
