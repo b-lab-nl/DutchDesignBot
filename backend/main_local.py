@@ -3,10 +3,6 @@
 import os
 import yaml
 import sqlite3
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-
-import psycopg2
 from datetime import datetime
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
@@ -18,13 +14,15 @@ from elevenlabs.client import ElevenLabs, AsyncElevenLabs
 import logging
 
 # make logger
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
 
 # Load environment variables and settings
 load_dotenv('.env')
 with open('settings.yaml', 'r') as f:
     settings = yaml.safe_load(f)
+
 
 logger.info(f"Setting OpenAI KEY")
 OpenAIClient = OpenAI(api_key=os.getenv('LLM_OAI_KEY'))
@@ -35,8 +33,8 @@ ElevenClient = ElevenLabs(api_key=os.getenv('STT_EL_KEY'))  # Get ElevenLabs API
 # Initialize FastAPI app
 # Configure CORS
 origins = [
-     "https://dutchdesignbot-ux.netlify.app", # "http://localhost:3000",  # Frontend origin
-     "https://dutchdesignbot-scoreboard.netlify.app" #"http://localhost:4000"  # Scoreboard origin
+     "http://localhost:3000",  # Frontend origin
+     "http://localhost:4000"  # Scoreboard origin
 ]
 
 app = FastAPI()
@@ -49,53 +47,19 @@ app.add_middleware(
 )
 
 # Database setup
-DATABASE_USER = os.environ.get("DATABASE_USER")
-DATABASE_URL = os.environ.get("DATABASE_URL")
-DATABASE_NAME = os.environ.get('DATABASE_NAME')
-INSTANCE_CONNECTION_NAME = os.environ.get('INSTANCE_CONNECTION_NAME')
-DATABASE_PASSWORD = os.environ.get("DATABASE_PASSWORD")
-DATABASE_URL = f"postgresql://{DATABASE_USER}:{DATABASE_PASSWORD}@/{DATABASE_NAME}?host=/cloudsql/{INSTANCE_CONNECTION_NAME}"
-
-DATA_LOCAL = False # if False, the assume Postgresql with the DATABASE_URL
-
-if DATA_LOCAL:
-    logger.info(f"Making SQL Lite")
-    conn = sqlite3.connect('answers.db', check_same_thread=False)
-    cursor = conn.cursor()
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS answers (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            datetime TEXT,
-            challenge TEXT,
-            solution TEXT,
-            pre_filled TEXT
-        )
-    ''')
-    conn.commit()
-else:
-    try:
-        logger.info(f"Making/connecting to Postgresql")
-        conn = psycopg2.connect(DATABASE_URL)
-        cursor = conn.cursor()
-    except:
-        logger.error(f"Error in connecting to Postgresql, falling back to SQLite3")
-        logger.info(f"Making SQL Lite")
-        conn = sqlite3.connect('answers.db', check_same_thread=False)
-        cursor = conn.cursor()
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS answers (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                datetime TEXT,
-                challenge TEXT,
-                solution TEXT,
-                pre_filled TEXT,
-                attempt_number INTEGER,
-                bot_response TEXT,
-                human_score INTEGER,
-                bot_score INTEGER
-            )
-        ''')
-        conn.commit()
+logger.info(f"Making SQL Lite")
+conn = sqlite3.connect('answers.db', check_same_thread=False)
+cursor = conn.cursor()
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS answers (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        datetime TEXT,
+        challenge TEXT,
+        solution TEXT,
+        pre_filled TEXT
+    )
+''')
+conn.commit()
 
 
 class ScoreResponse(BaseModel):
@@ -220,4 +184,4 @@ def generate_audio(text):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8080)
+    uvicorn.run(app, host="0.0.0.0", port=1232)

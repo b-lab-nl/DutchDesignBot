@@ -3,10 +3,10 @@
 The Dutch Design Bot is part of an exhibition on the Dutch Design Week. The setup is basically:
 * the user walks into in the setup, a closed of booth with a screen, a keyboard and mouse
 * the user sees a minimalistic interface with two carrousels, one displaying a list of challenges, one displaying a list of solutions, with the option to manually enter a solution
-* after a selecting both challenge/solution the combination is evaluated or originality and the user is talked to by bot, using ElevenLabs/OpenAI API's. 
+* after a selecting both challenge/solution the combination is evaluated or originality and the user is talked to by bot, using ElevenLabs/OpenAI API's.
 
 
-# Interface 
+# Interface
 * Black background with matrix green letters in robotic font
 * Portrait format
 * Top-bar: moving carrousel with world problems: climate change, environmental destruction, energy shortage, water shortage, inequality, world hunger, rise of fascism, loss of privacy, rogue AGI, loss of privacy
@@ -32,7 +32,7 @@ The Dutch Design Bot is part of an exhibition on the Dutch Design Week. The setu
 * the user get's maximum 2 attempts with the pre-filled options
   * of 2 attempts are reached, user has to manually fill-in the solution
 * all answers are stored in SQLlite as datetime, challenge, solution, pre-filled (yes/no)
-* Sarcastic bot response if: 
+* Sarcastic bot response if:
   * if the user manually fills in an answer that is part of the pre-filled option
   * if the user selects any pre-filled option
   * if the manually filled in answer that is _not original_: e.g. using a distance metric based on SBERT with respect to the previous answers (that are in SQLlite)
@@ -52,6 +52,42 @@ We use an API that receives a dictionary with:
 To start the service run:
 
 ```bash
+echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+sudo apt-get install apt-transport-https ca-certificates gnupg
+curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+sudo apt-get update && sudo apt-get install google-cloud-sdk
+```
+
+or for MacOS
+```bash
+brew install --cask google-cloud-sdk
+```
+
+Then ```gcloud init``` and select the project.
+
+If you want to add/change a secrete:
+```bash
+echo -n 'YOUR_OPENAI_API_KEY' | gcloud secrets create LLM_OAI_KEY --data-file=-
+echo -n 'YOUR_ELEVENLABS_API_KEY' | gcloud secrets create STT_EL_KEY --data-file=-
+
+gcloud secrets add-iam-policy-binding LLM_OAI_KEY \
+  --member="serviceAccount:dutchdesignbot@dutchdesignapi.iam.gserviceaccount.com" \
+  --role="roles/secretmanager.secretAccessor"
+
+gcloud secrets add-iam-policy-binding STT_EL_KEY \
+  --member="serviceAccount:dutchdesignbot@dutchdesignapi.iam.gserviceaccount.com" \
+  --role="roles/secretmanager.secretAccessor"
+```
+
+and add to your cloud-run deployment
+```bash
+gcloud run deploy dutchdesignbot \
+    --set-secrets=LLM_OAI_KEY=LLM_OAI_KEY:latest,STT_EL_KEY=STT_EL_KEY:latest \
+    ...
+```
+
+Then install the dependencies and start the services with
+```bash
 poetry install
 
 cd frontend
@@ -59,7 +95,7 @@ npm install
 npm start
 
 cd ../scoreboard
-npm install 
+npm install
 npm start
 
 cd ../backend
@@ -88,7 +124,7 @@ LLM_OAI_KEY=xxx
 STT_EL_KEY=xxx
 ```
 
-Now the app will be available on ```localhost:3000```
+Now the app will be available on ```localhost:3000```, or
 
 
 The _level of surprise_ of the model can be done in several ways:
@@ -97,11 +133,11 @@ The _level of surprise_ of the model can be done in several ways:
 - simulate it: in principle we can force the model to give a certain answer, which would be the answer of the user. We can then compare the total relative probability of the generated tokens with
 
 
-The base prompt-template to extract the "surprise" is 
+The base prompt-template to extract the "surprise" is
 ```python
 QUEST_PROBLEM = "zoonosis"
 QUEST_PROBLEM_DESCRIPTION = """Humans are over-exploiting the animal kingdom in search for proteins, minerals and for the satisfaction of ancient old superstitions.
-This over-exploitation leads to dangerous zoonoses like Covid19, it can lead to collapsing food chains, to barren infertile soil, to reduced biodiversity and it depends on massive suffering of animals.  
+This over-exploitation leads to dangerous zoonoses like Covid19, it can lead to collapsing food chains, to barren infertile soil, to reduced biodiversity and it depends on massive suffering of animals.
 """
 SOLUTION_SUGGESTION = "eat less animals"
 

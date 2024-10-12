@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import "./App.css";
+
+const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:1232";
 
 const EMOJIS = {
-  human: ['🎉', '🎊', '🥳', '🪅', '🍾'],
-  bot: ['😴', '🥱', '💤']
+  human: ["🎉", "🎊", "🥳", "🪅", "🍾"],
+  bot: ["😴", "🥱", "💤"],
 };
 
 const EmojiRain = ({ type }) => {
@@ -16,7 +18,7 @@ const EmojiRain = ({ type }) => {
           style={{
             left: `${Math.random() * 100}%`,
             animationDuration: `${Math.random() * 2 + 3}s`,
-            animationDelay: `${Math.random() * 5}s`
+            animationDelay: `${Math.random() * 5}s`,
           }}
         >
           {EMOJIS[type][Math.floor(Math.random() * EMOJIS[type].length)]}
@@ -28,21 +30,21 @@ const EmojiRain = ({ type }) => {
 
 const fetchScoresFromAPI = async () => {
   try {
-    const response = await fetch('http://localhost:1232/api/score', {
-      method: 'POST',
+    const response = await fetch(`${backendUrl}/api/score`, {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
 
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error("Network response was not ok");
     }
 
     const data = await response.json();
     return { human: data.human_score, bot: data.bot_score };
   } catch (error) {
-    console.error('Error fetching scores:', error);
+    console.error("Error fetching scores:", error);
     throw error;
   }
 };
@@ -58,12 +60,11 @@ const App = () => {
     const fetchScores = async () => {
       try {
         const fetchedScores = await fetchScoresFromAPI();
-        setScores(prevScores => {
+        setScores((prevScores) => {
           if (fetchedScores.human > prevScores.human) {
             setShowHumanEmojis(true);
             setTimeout(() => setShowHumanEmojis(false), 15000);
             // TODO: change background color for .scoreboard to #A2B0FE
-
           }
           if (fetchedScores.bot > prevScores.bot) {
             setShowBotEmojis(true);
@@ -73,7 +74,7 @@ const App = () => {
         });
         setError(null);
       } catch (err) {
-        setError('Failed to fetch scores. Please try again later.');
+        setError("Failed to fetch scores. Please try again later.");
       } finally {
         setLoading(false);
       }
@@ -88,23 +89,19 @@ const App = () => {
     <div className="App">
       {showHumanEmojis && <EmojiRain type="human" />}
       {showBotEmojis && <EmojiRain type="bot" />}
-      <div className={`scoreboard ${showHumanEmojis ? 'party' : ''}`}>
+      <div className={`scoreboard ${showHumanEmojis ? "party" : ""}`}>
         <h1>Let's save the world with tech</h1>
         {loading && <p>Loading scores...</p>}
         {error && <p className="error">{error}</p>}
         <div className="scores">
-            <div className="score-item">
-              <span>HUMANS</span>
-              <div className="score-human">            
-                {scores.human}
-              </div>
-            </div>
-            <div className="score-item">
-              <span>TECH</span>
-              <div className="score-bot">  
-                {scores.bot}
-              </div>
-            </div>
+          <div className="score-item">
+            <span>HUMANS</span>
+            <div className="score-human">{scores.human}</div>
+          </div>
+          <div className="score-item">
+            <span>TECH</span>
+            <div className="score-bot">{scores.bot}</div>
+          </div>
         </div>
       </div>
     </div>
