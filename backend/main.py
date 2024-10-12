@@ -56,9 +56,28 @@ INSTANCE_CONNECTION_NAME = os.environ.get('INSTANCE_CONNECTION_NAME')
 DATABASE_PASSWORD = os.environ.get("DATABASE_PASSWORD")
 DATABASE_URL = f"postgresql://{DATABASE_USER}:{DATABASE_PASSWORD}@/{DATABASE_NAME}?host=/cloudsql/{INSTANCE_CONNECTION_NAME}"
 
-DATA_LOCAL = False # if False, the assume Postgresql with the DATABASE_URL
+DATA_LOCALE = 'gc'
+try:
+    logger.info(f"Making/connecting to Postgresql")
+    conn = psycopg2.connect(DATABASE_URL)
+    cursor = conn.cursor()
+    # check if answers table exists
+    # if not, create it
+    cursor.execute('''CREATE TABLE IF NOT EXISTS answers (
+        id SERIAL PRIMARY KEY,
+        datetime TEXT,
+        challenge TEXT,
+        solution TEXT,
+        pre_filled TEXT,
+        attempt_number INTEGER,
+        bot_response TEXT,
+        human_score INTEGER,
+        bot_score INTEGER
+    )''')
+    conn.commit()
 
-if DATA_LOCAL:
+except:
+    logger.error(f"Error in connecting to Postgresql, falling back to SQLite3")
     logger.info(f"Making SQL Lite")
     conn = sqlite3.connect('answers.db', check_same_thread=False)
     cursor = conn.cursor()
@@ -68,49 +87,15 @@ if DATA_LOCAL:
             datetime TEXT,
             challenge TEXT,
             solution TEXT,
-            pre_filled TEXT
-        )
-    ''')
-    conn.commit()
-else:
-    try:
-        logger.info(f"Making/connecting to Postgresql")
-        conn = psycopg2.connect(DATABASE_URL)
-        cursor = conn.cursor()
-        # check if answers table exists
-        # if not, create it
-        cursor.execute('''CREATE TABLE IF NOT EXISTS answers (
-            id SERIAL PRIMARY KEY,
-            datetime TEXT,
-            challenge TEXT,
-            solution TEXT,
             pre_filled TEXT,
             attempt_number INTEGER,
             bot_response TEXT,
             human_score INTEGER,
             bot_score INTEGER
-        )''')
-        conn.commit()
-
-    except:
-        logger.error(f"Error in connecting to Postgresql, falling back to SQLite3")
-        logger.info(f"Making SQL Lite")
-        conn = sqlite3.connect('answers.db', check_same_thread=False)
-        cursor = conn.cursor()
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS answers (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                datetime TEXT,
-                challenge TEXT,
-                solution TEXT,
-                pre_filled TEXT,
-                attempt_number INTEGER,
-                bot_response TEXT,
-                human_score INTEGER,
-                bot_score INTEGER
-            )
-        ''')
-        conn.commit()
+        )
+    ''')
+    conn.commit()
+    DATA_LOCALE = 'local'
 
 
 class ScoreResponse(BaseModel):
@@ -153,12 +138,15 @@ def evaluate(request: EvaluationRequest):
         bot_score = 0
         original = True
 
-    cursor.execute('''
-        INSERT INTO answers (datetime, challenge, solution, pre_filled, attempt_number, bot_response, human_score, bot_score)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    ''', (datetime.now().isoformat(), request.challenge, request.solution, 'yes' if request.pre_filled else 'no',
-          request.attempt_number, bot_response, human_score, bot_score))
-    conn.commit()
+    try:
+        cursor.execute('''
+            INSERT INTO answers (datetime, challenge, solution, pre_filled, attempt_number, bot_response, human_score, bot_score)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+        ''', (datetime.now().isoformat(), request.challenge, request.solution, 'yes' if request.pre_filled else 'no',
+            request.attempt_number, bot_response, human_score, bot_score))
+        conn.commit()
+    except Exception as e:
+        logger.error(f"Error in storing the answer in the {DATA_LOCALE} database:{e}")
 
     # Generate audio using ElevenLabs
     audio_base64 = generate_audio(bot_response)
