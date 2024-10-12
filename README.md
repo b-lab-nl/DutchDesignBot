@@ -1,4 +1,8 @@
 # DutchDesignBot
+**SCOREBOARD**: [![Netlify Status](https://api.netlify.com/api/v1/badges/aaa0a9fa-f8cc-48ab-9fc1-4c9abc0c0599/deploy-status)](https://app.netlify.com/sites/dutchdesignbot-scoreboard/deploys)
+
+**FRONTEND**: [![Netlify Status](https://api.netlify.com/api/v1/badges/03302864-21f6-4193-8385-a1a3a643d606/deploy-status)](https://app.netlify.com/sites/dutchdesignbot-ux/deploys)
+
 
 The Dutch Design Bot is part of an exhibition on the Dutch Design Week. The setup is basically:
 * the user walks into in the setup, a closed of booth with a screen, a keyboard and mouse
