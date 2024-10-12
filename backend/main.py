@@ -77,6 +77,21 @@ else:
         logger.info(f"Making/connecting to Postgresql")
         conn = psycopg2.connect(DATABASE_URL)
         cursor = conn.cursor()
+        # check if answers table exists
+        # if not, create it
+        cursor.execute('''CREATE TABLE IF NOT EXISTS answers (
+            id SERIAL PRIMARY KEY,
+            datetime TEXT,
+            challenge TEXT,
+            solution TEXT,
+            pre_filled TEXT,
+            attempt_number INTEGER,
+            bot_response TEXT,
+            human_score INTEGER,
+            bot_score INTEGER
+        )''')
+        conn.commit()
+
     except:
         logger.error(f"Error in connecting to Postgresql, falling back to SQLite3")
         logger.info(f"Making SQL Lite")
