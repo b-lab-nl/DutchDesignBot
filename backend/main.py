@@ -12,10 +12,15 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+
 from openai import OpenAI
+from anthropic import Anthropic, HUMAN_PROMPT, AI_PROMPT
+from fuzzywuzzy import fuzz
+
 import base64
 from elevenlabs.client import ElevenLabs, AsyncElevenLabs
 import logging
+import argparse
 
 # make logger
 logging.basicConfig(level=logging.INFO)
@@ -28,6 +33,8 @@ with open('settings.yaml', 'r') as f:
 
 logger.info(f"Setting OpenAI KEY")
 OpenAIClient = OpenAI(api_key=os.getenv('LLM_OAI_KEY'))
+AnthropicClient = Anthropic(api_key=os.getenv('LLM_ANTHROPIC_KEY'))
+
 logger.info(f"Setting Elevenlabs KEY")
 ElevenClient = ElevenLabs(api_key=os.getenv('STT_EL_KEY'))  # Get ElevenLabs API key
 
@@ -35,8 +42,8 @@ ElevenClient = ElevenLabs(api_key=os.getenv('STT_EL_KEY'))  # Get ElevenLabs API
 # Initialize FastAPI app
 # Configure CORS
 origins = [
-     "https://dutchdesignbot-ux.netlify.app", # "http://localhost:3000",  # Frontend origin
-     "https://dutchdesignbot-scoreboard.netlify.app" #"http://localhost:4000"  # Scoreboard origin
+     "http://localhost:3000", # "https://dutchdesignbot-ux.netlify.app", # "http://localhost:3000",  # Frontend origin
+     "http://localhost:4000" # "https://dutchdesignbot-scoreboard.netlify.app" #"http://localhost:4000"  # Scoreboard origin
 ]
 
 app = FastAPI()
@@ -49,6 +56,7 @@ app.add_middleware(
 )
 
 # Database setup
+FUZZY_THRESHOLD = settings['originality']['fuzzy_threshold']
 DATABASE_USER = os.environ.get("DATABASE_USER")
 DATABASE_URL = os.environ.get("DATABASE_URL")
 DATABASE_NAME = os.environ.get('DATABASE_NAME')
@@ -109,6 +117,10 @@ class EvaluationRequest(BaseModel):
     pre_filled: bool
     attempt_number: int
 
+class SoundRequest(BaseModel):
+    textsnippet: str
+    positive: bool
+
 # API endpoint for evaluation
 @app.post('/api/evaluate')
 def evaluate(request: EvaluationRequest):
@@ -149,7 +161,7 @@ def evaluate(request: EvaluationRequest):
         logger.error(f"Error in storing the answer in the {DATA_LOCALE} database:{e}")
 
     # Generate audio using ElevenLabs
-    audio_base64 = generate_audio(bot_response)
+    audio_base64 = generate_audio(bot_response, positive=human_score > 0)
 
     return {'bot_response': bot_response, 'audio_base64': audio_base64, 'original': original}
 
@@ -173,7 +185,11 @@ async def score():
         print(f"Error calculating scores: {str(e)}")
         raise HTTPException(status_code=500, detail="An error occurred while calculating scores")
 
-
+@app.post("/api/sound")
+async def sound(request: SoundRequest):
+    # return the audio base64 string for the given text snippet
+    audio_base64 = generate_audio(request.textsnippet)
+    return {'audio_base64': audio_base64}
 
 def check_originality(solution):
     # Check for previous solutions in the database
@@ -181,34 +197,75 @@ def check_originality(solution):
     previous_solutions = [row[0].lower() for row in cursor.fetchall()]
     if solution.lower() in previous_solutions:
         return False
+    # use fuzzywuzzy matching to check for similarity
+    for prev_solution in previous_solutions:
+        if fuzz.ratio(solution.lower(), prev_solution) > FUZZY_THRESHOLD:
+            return False
     # Additional originality checks can be added here
     return True
 
 def generate_sarcastic_response(challenge, solution):
-    prompt = f"The human has selected {challenge} as the world problem. His/her boring and predictable suggested solution is {solution}."
-    response = OpenAIClient.chat.completions.create(
-        model=settings['llm']['model'],
-        messages=[
-            {"role": "system", "content": settings['llm']['system_sarcastic']},
-            {"role": "user", "content": prompt}
-        ],
-        max_tokens=settings['llm']['max_tokens']
-    )
-    return response.choices[0].message.content.strip()
+    prompt = f"I have selected {challenge} as the world problem. My boring and predictable suggested solution is {solution}."
+    try:
+        response = OpenAIClient.chat.completions.create(
+            model=settings['llm']['model'],
+            temperature=settings['llm']['temperature'],
+            messages=[
+                {"role": "system", "content": settings['llm']['system_sarcastic']},
+                {"role": "user", "content": prompt}
+            ],
+            max_tokens=settings['llm']['max_tokens']
+        )
+        return response.choices[0].message.content.strip()
+    except Exception as e:
+        logger.error(f"Error in generating sarcastic response using OpenAI: {e}, falling back to Anthropic")
+        response = AnthropicClient.messages.create(
+            max_tokens=settings['anthropic']['max_tokens'],
+            temperature=settings['anthropic']['temperature'],
+            system=settings['llm']['system_sarcastic'],
+            messages=[                
+                {
+                    "role": "user",
+                    "content": prompt,
+                }
+            ],
+            model="claude-3-5-sonnet-20240620",
+            )
+        return response.content[0].strip()
+
 
 def generate_positive_response(challenge, solution):
-    prompt = f"The human has selected {challenge} as the problem. His/her suggested solution is {solution}, which is pretty creative!"
-    response = OpenAIClient.chat.completions.create(
-        model=settings['llm']['model'],
-        messages=[
-            {"role": "system", "content": settings['llm']['system_positive']},
-            {"role": "user", "content": prompt}
-        ],
-        max_tokens=settings['llm']['max_tokens']
-    )
-    return response.choices[0].message.content.strip()
-
-def generate_audio(text):
+    prompt = f"I have selected {challenge} as the problem. my amazing solution is {solution}, which is pretty creative!"
+    try:
+        response = OpenAIClient.chat.completions.create(
+            model=settings['llm']['model'],
+            temperature=settings['llm']['temperature'],
+            messages=[
+                {"role": "system", "content": settings['llm']['system_positive']},
+                {"role": "user", "content": prompt}
+            ],
+            max_tokens=settings['llm']['max_tokens']
+        )
+        return response.choices[0].message.content.strip()
+    except Exception as e:
+        logger.error(f"Error in generating sarcastic response using OpenAI: {e}, falling back to Anthropic")
+        response = AnthropicClient.messages.create(
+            max_tokens=settings['anthropic']['max_tokens'],
+            temperature=settings['anthropic']['temperature'],
+            system=settings['llm']['system_positive'],
+            messages=[                
+                {
+                    "role": "user",
+                    "content": prompt,
+                }
+            ],
+            model="claude-3-5-sonnet-20240620",
+            )
+        return response.content[0].strip()
+def generate_audio(text, positive=False):
+    if positive:
+        settings['tts']['voice_settings']['exaggeration'] = 0.4
+        settings['tts']['voice_settings']['stability'] = 0.2
     audio = ElevenClient.generate(
         text=text,
         voice=settings['tts']['voice'],
@@ -223,4 +280,12 @@ def generate_audio(text):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8080)
+    # parse --local argument, if present, run the server locally
+    PORT = 8080
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--local", help="run the server locally", action="store_true")
+    args = parser.parse_args()
+    if args.local:
+        PORT = 1232
+
+    uvicorn.run(app, host="0.0.0.0", port=PORT, log_level="debug")

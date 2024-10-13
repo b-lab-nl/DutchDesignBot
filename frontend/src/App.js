@@ -64,11 +64,37 @@ function App() {
     if (selectedChallenge && selectedSolution===null){
       console.log("No solution selected yet");
       // 
-      // 
-      setBotResponse(`Algy\n 
-        Hi I am Algy. What a great choice. What solutions \
-        do you have in mind to solve some of the issues related to\
-        ${selectedChallenge}?`);
+      // add a sleep timer here to simulate the user thinking
+      //
+      setBotResponse(`. . . . . . .`);
+      setTimeout(() => {      
+        var botResponseText = `Welcome, I am Aly. ${selectedChallenge}, what a great choice. What solutions \
+          do you have in mind to solve some of the issues related to\
+              ${selectedChallenge}?`;
+        
+        // send to API for sound generation
+        const textSnippet = {
+          textsnippet: botResponseText,
+          positive: true
+        };
+        axios.post(`${backendUrl}/api/sound`, textSnippet)
+            .then((response) => {
+              const audioBase64 = response.data.audio_base64;
+              const audioURL = `data:audio/mpeg;base64,${audioBase64}`;
+              setAudioSrc(audioURL);
+              
+              const audio = new Audio(audioURL);
+              audio.play();
+              setBotResponse(botResponseText);              
+            })
+            .catch((error) => console.error("Error:", error))
+            .finally(() => {
+              setIsLoading(false);
+              setShowBottomCarousel(true);
+              setCanSubmitNewSolution(true);
+            });
+      }, 2500);
+
       setShowBottomCarousel(true);
     }
     else if (selectedChallenge  && selectedSolution===""){

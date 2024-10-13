@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./Chatbox.css";
 
+
 function chatbox({
   selectedChallenge,
   selectedSolution,
@@ -9,6 +10,8 @@ function chatbox({
 }) {
   const canvasRef = useRef(null);
   const [canvasContext, setCanvasContext] = useState(null);
+  const botResponseRef = useRef(null);
+  const humanResponseRef = useRef(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -18,27 +21,54 @@ function chatbox({
     let opacity = 1;
     let fadingIn = false;
 
-    // Snake animation variables
-    let snakeX = canvas.width / 2;
-    let snakeY = canvas.height / 2;
-    let snakeAngle = 0;
-    const snakeSpeed = 2;
-    const trailOpacity = 1.;
-    let dirX = 0;
-    let dirY = 0;
-    let stepCount = 0;
-    let randStepInterval = 50;
+    const drawArrow = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const arrowHeight = 50; // height of the arrow
+      const arrowWidth = 20;  // width of the arrow
+
+      // Coordinates for the arrow tip
+      const arrowTipX = canvas.width / 2;
+      const arrowTipY = canvas.height / 2 - 180; // Position the arrow above the text
+
+      ctx.beginPath();
+      // Move to the tip of the arrow
+      ctx.moveTo(arrowTipX, arrowTipY);
+
+      // Draw the left side of the arrow
+      ctx.lineTo(arrowTipX - arrowWidth / 2, arrowTipY + arrowHeight);
+
+      // Draw the right side of the arrow
+      ctx.lineTo(arrowTipX + arrowWidth / 2, arrowTipY + arrowHeight);
+
+      // Draw back to the tip of the arrow
+      ctx.lineTo(arrowTipX, arrowTipY);
+
+      // Draw the arrow's vertical line (shaft)
+      ctx.moveTo(arrowTipX, arrowTipY + arrowHeight);
+      ctx.lineTo(arrowTipX, arrowTipY + arrowHeight + 40); // 40 is the length of the shaft
+
+      ctx.strokeStyle = `rgba(0, 0, 0, ${opacity})`; // Set color and opacity
+      ctx.lineWidth = 5; // Set the arrow thickness
+      ctx.stroke();
+      if (fadingIn) {
+        opacity += 0.02;
+        if (opacity >= 1) fadingIn = false;
+      } else {
+        opacity -= 0.02;
+        if (opacity <= 0) fadingIn = true;
+      }
+
+    };
 
     const drawText = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.font = "24px Arial";
+      ctx.font = "24px Inter";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillStyle = `rgba(0, 255, 0, ${opacity})`;
+      ctx.fillStyle = `rgba(0, 0, 0, ${opacity})`;
       ctx.fillText(
         "Select your challenge",
         canvas.width / 2,
-        canvas.height / 2,
+        canvas.height / 2 - 50,
       );
 
       if (fadingIn) {
@@ -50,62 +80,13 @@ function chatbox({
       }
     };
 
-    const drawSnake = () => {
-      // Update snake position
-      snakeAngle += 0.05;
-      stepCount += 1;
-      if (stepCount % randStepInterval === 0) {
-        dirX = Math.round(Math.random());
-        dirY = Math.round(Math.random());
-        randStepInterval = Math.floor(Math.random() * 100) + 50;
-      }
-      if (stepCount % (2 * randStepInterval) === 0) {
-        if (Math.round(Math.random()) === 1) {
-            dirY = 1 / 2; // Move horizontally
-        } else {
-            dirX = 1 / 2; // Move vertically
-        }
-    }
-
-      if (stepCount > 250_000){
-        stepCount = 0;
-        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canva
-      }
-
-      const newX = snakeX + (1 / 2 - dirX) * snakeSpeed;
-      const newY = snakeY + (1 / 2 - dirY) * snakeSpeed;
-
-      // Draw trail
-      ctx.beginPath();
-      ctx.moveTo(snakeX, snakeY);
-      ctx.lineTo(newX, newY);
-      ctx.strokeStyle = `rgba(0, 255, 0, ${trailOpacity})`;
-      ctx.lineWidth = 2;
-      ctx.stroke();
-
-      // Update snake position
-      snakeX = newX;
-      snakeY = newY;
-
-      // Wrap snake around canvas edges
-      if (snakeX < 0) snakeX = canvas.width;
-      if (snakeX > canvas.width) snakeX = 0;
-      if (snakeY < 0) snakeY = canvas.height;
-      if (snakeY > canvas.height) snakeY = 0;
-
-      // Draw snake head
-      ctx.beginPath();
-      ctx.arc(snakeX, snakeY, 4, 0, Math.PI * 2);
-      ctx.fillStyle = "lightgreen";
-      ctx.fill();
-    };
 
     const animate = () => {
-      if (!botResponse) {
-      //drawSnake();
-      
-      } else {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (!botResponse && !selectedChallenge)  {
+        drawArrow();
+        drawText();
+      }else {
+         ctx.clearRect(0, 0, canvas.width, canvas.height);
       }
 
       animationFrameId = requestAnimationFrame(animate);
@@ -118,6 +99,41 @@ function chatbox({
     };
   }, [selectedChallenge, isLoading]);
 
+  function animateText(text, container) {
+    container.innerHTML = ""; // Clear previous content
+    const words = text.split(" ");
+    let index = 0;
+  
+    function addWord() {
+      if (index < words.length) {
+        const span = document.createElement("span");
+        span.textContent = words[index] + " ";
+        span.style.opacity = "0";
+        span.style.animation = `fadeIn 0.6s ease forwards`;
+        container.appendChild(span);
+        index++;
+        
+        // Use requestAnimationFrame for better performance
+        setTimeout(addWord, 150); 
+      }
+    }
+    
+    addWord();
+  }
+  
+
+  useEffect(() => {
+    if (botResponse) {
+      animateText(botResponse, botResponseRef.current);
+    }
+  }, [botResponse]);
+
+  useEffect(() => {
+    if (selectedSolution) {
+      animateText(selectedSolution, humanResponseRef.current);
+    }
+  }, [selectedSolution]);
+  
   useEffect(() => {
     if (!isLoading && canvasContext) {
       canvasContext.clearRect(
@@ -137,15 +153,18 @@ function chatbox({
 
   return (
     <div className={wrapperClassName}>
-      <canvas
-        ref={canvasRef}
-        width={600}
-        height={400}
-        className="chatbox-canvas"
-      />
-      {botResponse && <div className="bot-response-overlay">{botResponse}</div>}
-      {selectedSolution && <div className="human-response-overlay">{selectedSolution}</div>}
+      <canvas ref={canvasRef} width={600} height={400} className="chatbox-canvas" />
+      {botResponse && (
+        <div className="bot-response-overlay">
+          <div ref={botResponseRef} className="word-animation"></div>
+        </div>
+      )}
+      {selectedSolution && (
+        <div className="human-response-overlay">
+          <div ref={humanResponseRef} className="word-animation"></div>
+        </div>
+      )}
     </div>
   );
-}
+};
 export default chatbox;

@@ -9,19 +9,23 @@ const SolutionSelection = ({
   handleManualSubmit,
   base_solutions,
   selectedSolution,
-  handleSolutionClick
+  handleSolutionClick,
+  selectedChallenge
 }) => {
   if (showManualInput || attemptNumber >= 2) {
     return (
       <div className="manual-input-container">
         <div className="manual-input">
+          <div className='manual-input-header'>ENTER AN UNEXPECTED SOLUTION</div>
+          <div>
           <input
             type="text"
             value={manualSolution}
             onChange={(e) => setManualSolution(e.target.value)}
-            placeholder="Enter your solution"
+            placeholder={`${selectedChallenge} + ..`}
             disabled={!canSubmitNewSolution}
           />
+          </div>
         </div>
         <div 
           className='carousel-item-bottom button' 

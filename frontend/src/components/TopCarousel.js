@@ -4,15 +4,13 @@ import React from 'react';
 import './TopCarousel.css';
 
 const challenges = [
-  'Climate Change',
-  'Environmental Destruction',
-  'Energy Shortage',
-  'Water Shortage',
-  'Inequality',
-  'World Hunger',
-  'Rise of Fascism',
-  'Loss of Privacy',
-  'Rogue AGI',
+  'Inclusivity',
+  'Safety', 
+  'Healthcare',
+  'Housing',
+  'Energy',
+  'Water',
+  'Food'
 ];
 
 function TopCarousel({ selectedChallenge, setSelectedChallenge }) {

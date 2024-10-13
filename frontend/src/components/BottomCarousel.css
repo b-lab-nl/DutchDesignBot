@@ -1,4 +1,5 @@
 /* BottomCarousel.css */
+
 .bottom-carousel-div {
     width: 100%;
     display: flex;
@@ -53,6 +54,7 @@
 }
 .carousel-item-bottom.selected {
     box-shadow: 0 0 10px #000000;
+    background-color: #9F0;
     outline: none; /* Remove default focus outline */
 }
 .carousel-item-bottom.fixed:hover,
@@ -71,6 +73,7 @@
     background-color: #A2B0FE;
     z-index: 99;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
@@ -101,4 +104,9 @@
     gap: 10px;
   }
 
-  
+  .manual-input-header{
+    font-size: 35px;
+    font-family: "Space Grotesk";
+    color: #000000;
+    margin-bottom: 10px;
+}
