@@ -126,11 +126,19 @@ function App() {
           // TODO: if response.data.original==false then give bored emoji screensaver for 10 seconds,
           // and play bored music for 10 seconds, then reset screen and attemptNumber to 0
           if (!response.data.original) {
-            audioBoring.play();
+            setTimeout(() => {
+              audioBoring.play();
+            }, 5000);
           } else {
             // TODO: if response.data.original==true then give party emoji screensaver for 10 seconds,
             // and play glorious music, then restart the session
-            audioOG.play();
+            // wait for 5s before playing the glorious music
+            setTimeout(() => {
+              audioOG.play();
+              // show bored smileys for 5 seconds
+              // then reset the screen
+              // and attemptNumber to 0
+            }, 5000);
           }
         })
         .catch((error) => console.error("Error:", error))

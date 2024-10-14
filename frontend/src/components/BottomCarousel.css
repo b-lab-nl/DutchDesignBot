@@ -84,9 +84,10 @@
     border-radius: 10px;
     padding: 0px;
     font-family: "Space Grotesk";
-    font-size: 40px;
+    font-size: 50px;
     flex-grow: 1;
     margin-right: 5px;
+    width: 100%;
 }
 .manual-input button {
     background-color: #ffffff;

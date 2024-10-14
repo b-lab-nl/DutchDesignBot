@@ -105,7 +105,7 @@ const App = () => {
             autoPlay
             onEnded={handleVideoEnd}
           >
-            <source src="path_to_your_video.mp4" type="video/mp4" />
+            <source src="assets/video.mp4" type="video/mp4" />
             {/* Add additional sources if needed */}
           </video>
         </div>
