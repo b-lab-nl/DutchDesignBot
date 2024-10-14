@@ -42,8 +42,8 @@ ElevenClient = ElevenLabs(api_key=os.getenv('STT_EL_KEY'))  # Get ElevenLabs API
 # Initialize FastAPI app
 # Configure CORS
 origins = [
-     "http://localhost:3000", # "https://dutchdesignbot-ux.netlify.app", # "http://localhost:3000",  # Frontend origin
-     "http://localhost:4000" # "https://dutchdesignbot-scoreboard.netlify.app" #"http://localhost:4000"  # Scoreboard origin
+     "https://dutchdesignbot-ux.netlify.app", # "http://localhost:3000",  # Frontend origin
+     "https://dutchdesignbot-scoreboard.netlify.app" #"http://localhost:4000"  # Scoreboard origin
 ]
 
 app = FastAPI()
@@ -223,7 +223,7 @@ def generate_sarcastic_response(challenge, solution):
             max_tokens=settings['anthropic']['max_tokens'],
             temperature=settings['anthropic']['temperature'],
             system=settings['llm']['system_sarcastic'],
-            messages=[                
+            messages=[
                 {
                     "role": "user",
                     "content": prompt,
@@ -253,7 +253,7 @@ def generate_positive_response(challenge, solution):
             max_tokens=settings['anthropic']['max_tokens'],
             temperature=settings['anthropic']['temperature'],
             system=settings['llm']['system_positive'],
-            messages=[                
+            messages=[
                 {
                     "role": "user",
                     "content": prompt,

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+// App.js
+import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:1232";
@@ -55,6 +56,8 @@ const App = () => {
   const [error, setError] = useState(null);
   const [showHumanEmojis, setShowHumanEmojis] = useState(false);
   const [showBotEmojis, setShowBotEmojis] = useState(false);
+  const [showVideoBackground, setShowVideoBackground] = useState(false);
+  const videoRef = useRef(null);
 
   useEffect(() => {
     const fetchScores = async () => {
@@ -64,7 +67,8 @@ const App = () => {
           if (fetchedScores.human > prevScores.human) {
             setShowHumanEmojis(true);
             setTimeout(() => setShowHumanEmojis(false), 15000);
-            // TODO: change background color for .scoreboard to #A2B0FE
+            // Show the video background
+            setShowVideoBackground(true);
           }
           if (fetchedScores.bot > prevScores.bot) {
             setShowBotEmojis(true);
@@ -85,8 +89,27 @@ const App = () => {
     return () => clearInterval(intervalId);
   }, []);
 
+  // Handle video end event
+  const handleVideoEnd = () => {
+    setShowVideoBackground(false);
+  };
+
   return (
     <div className="App">
+      {showVideoBackground && (
+        <div className="video-background">
+          <video
+            id="bg-video"
+            ref={videoRef}
+            muted
+            autoPlay
+            onEnded={handleVideoEnd}
+          >
+            <source src="path_to_your_video.mp4" type="video/mp4" />
+            {/* Add additional sources if needed */}
+          </video>
+        </div>
+      )}
       {showHumanEmojis && <EmojiRain type="human" />}
       {showBotEmojis && <EmojiRain type="bot" />}
       <div className={`scoreboard ${showHumanEmojis ? "party" : ""}`}>

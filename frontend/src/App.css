@@ -1,49 +1,48 @@
 /* App.css */
 
 .App {
-    background-color: #2BB673;
-    color: #000000; /* Matrix green */
-    font-family: 'Inter', 'Lora', monospace;
+    background-color: #2bb673;
+    color: #000000;
+    font-family: "Inter", "Lora", monospace;
     text-align: center;
     height: 100vh;
     overflow: hidden;
-    transition: background-color 0.3s ease;
-  }
+    transition: background-color 0.6s ease-in-out 0.5s;
+}
 
-.App.manual-input-active{
-    background-color: #A2B0FE;
-  }
-  
+.App.manual-input-active {
+    background-color: #a2b0fe;
+    transition: background-color 0.6s ease-in-out 0.5s;
+}
+
 .bot-response {
     margin-top: 20px;
     font-size: 1.2em;
-  }
-  
+}
+
 .topSeparator {
-  height: 100px;
+    height: 100px;
 }
-.bottomSeperator{
-  height: 100px;
-
-}
-
-
-.Title{
-  width:100%;
-  align-items: center;
-  /* height:50px; */
-  margin-top: 150px;
-  font-size: 100px;
-  font-family: 'Inter';
-  padding-bottom: 90px;
+.bottomSeperator {
+    height: 100px;
 }
 
-.FooterBar{
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  color: rgb(255, 255, 255);
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 1.5em;
-  background-color: rgba(0, 0, 0, 0.982);
+.Title {
+    width: 100%;
+    align-items: center;
+    /* height:50px; */
+    margin-top: 150px;
+    font-size: 100px;
+    font-family: "Inter";
+    padding-bottom: 90px;
+}
+
+.FooterBar {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    color: rgb(255, 255, 255);
+    font-family: "Courier New", Courier, monospace;
+    font-size: 1.5em;
+    background-color: rgba(0, 0, 0, 0.982);
 }

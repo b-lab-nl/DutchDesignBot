@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useCallback, useRef} from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import TopCarousel from "./components/TopCarousel";
 import BottomCarousel from "./components/BottomCarousel";
 import Chatbox from "./components/Chatbox";
 import BoredEmoticons from "./components/BoredEmoticons";
-import SolutionSelection from './components/SolutionSelection';
+import SolutionSelection from "./components/SolutionSelection";
 
 import "./App.css";
 import axios from "axios";
@@ -24,7 +24,6 @@ function App() {
   const [canSubmitNewSolution, setCanSubmitNewSolution] = useState(true);
   const [isBored, setIsBored] = useState(false);
   const [lastSelectedSolution, setLastSelectedSolution] = useState(null);
- 
 
   const audioBoring = new Audio("/assets/boring.wav");
   const audioOG = new Audio("/assets/og.wav");
@@ -56,51 +55,49 @@ function App() {
     };
   }, [selectedChallenge, selectedSolution, resetInactivityTimer]);
 
-    
   const makeApiCall = useCallback(() => {
     console.log("Challenge:", selectedChallenge);
     console.log("Solution:", selectedSolution);
 
-    if (selectedChallenge && selectedSolution===null){
+    if (selectedChallenge && selectedSolution === null) {
       console.log("No solution selected yet");
-      // 
+      //
       // add a sleep timer here to simulate the user thinking
       //
       setBotResponse(`. . . . . . .`);
-      setTimeout(() => {      
+      setTimeout(() => {
         var botResponseText = `Welcome, I am Aly. ${selectedChallenge}, what a great choice. What solutions \
           do you have in mind to solve some of the issues related to\
               ${selectedChallenge}?`;
-        
+
         // send to API for sound generation
         const textSnippet = {
           textsnippet: botResponseText,
-          positive: true
+          positive: true,
         };
-        axios.post(`${backendUrl}/api/sound`, textSnippet)
-            .then((response) => {
-              const audioBase64 = response.data.audio_base64;
-              const audioURL = `data:audio/mpeg;base64,${audioBase64}`;
-              setAudioSrc(audioURL);
-              
-              const audio = new Audio(audioURL);
-              audio.play();
-              setBotResponse(botResponseText);              
-            })
-            .catch((error) => console.error("Error:", error))
-            .finally(() => {
-              setIsLoading(false);
-              setShowBottomCarousel(true);
-              setCanSubmitNewSolution(true);
-            });
+        axios
+          .post(`${backendUrl}/api/sound`, textSnippet)
+          .then((response) => {
+            const audioBase64 = response.data.audio_base64;
+            const audioURL = `data:audio/mpeg;base64,${audioBase64}`;
+            setAudioSrc(audioURL);
+
+            const audio = new Audio(audioURL);
+            audio.play();
+            setBotResponse(botResponseText);
+          })
+          .catch((error) => console.error("Error:", error))
+          .finally(() => {
+            setIsLoading(false);
+            setShowBottomCarousel(true);
+            setCanSubmitNewSolution(true);
+          });
       }, 2500);
 
       setShowBottomCarousel(true);
-    }
-    else if (selectedChallenge  && selectedSolution===""){
-      setBotResponse("You will actually need to fill in text here..like, with the keyboard..");
-      
-    }else if (selectedChallenge  && selectedSolution!==""){
+    } else if (selectedChallenge && selectedSolution === "") {
+      setBotResponse("You will need to fill in text here...");
+    } else if (selectedChallenge && selectedSolution !== "") {
       // if selectedSolution===lastSelectedSolution, set isBored to true
 
       console.log("Making API call");
@@ -126,16 +123,15 @@ function App() {
           const audio = new Audio(audioURL);
           audio.play();
 
-          // TODO: if response.data.original==false then give bored emoji screensaver for 10 seconds,  
+          // TODO: if response.data.original==false then give bored emoji screensaver for 10 seconds,
           // and play bored music for 10 seconds, then reset screen and attemptNumber to 0
           if (!response.data.original) {
             audioBoring.play();
-          }else{
-          // TODO: if response.data.original==true then give party emoji screensaver for 10 seconds, 
-          // and play glorious music, then restart the session            
+          } else {
+            // TODO: if response.data.original==true then give party emoji screensaver for 10 seconds,
+            // and play glorious music, then restart the session
             audioOG.play();
-        }
-
+          }
         })
         .catch((error) => console.error("Error:", error))
         .finally(() => {
@@ -176,13 +172,15 @@ function App() {
   };
 
   return (
-    <div className={`App ${(showManualInput || attemptNumber>=2) ? 'manual-input-active' : ''}`}>
+    <div
+      className={`App ${showManualInput || attemptNumber >= 2 ? "manual-input-active" : ""}`}
+    >
       <div className="Title">Let's save the world with tech</div>
-      {selectedChallenge==null && (
-      <TopCarousel
-        selectedChallenge={selectedChallenge}
-        setSelectedChallenge={handleChallengeSelect}
-      />
+      {selectedChallenge == null && (
+        <TopCarousel
+          selectedChallenge={selectedChallenge}
+          setSelectedChallenge={handleChallengeSelect}
+        />
       )}
       <div className="topSeparator"> </div>
       <Chatbox
@@ -191,7 +189,7 @@ function App() {
         botResponse={botResponse}
         isLoading={isLoading}
       />
-      <div className="bottomSeparator">   </div>
+      <div className="bottomSeparator"> </div>
       {showBottomCarousel && (
         <BottomCarousel
           selectedChallenge={selectedChallenge}
