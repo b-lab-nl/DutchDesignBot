@@ -53,6 +53,7 @@ const fetchScoresFromAPI = async () => {
 
 const App = () => {
   const [scores, setScores] = useState({ human: 0, bot: 0 });
+  const [scoreChange, setChange] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showHumanEmojis, setShowHumanEmojis] = useState(false);
@@ -77,6 +78,7 @@ const App = () => {
   // Effect hook to monitor changes and reset the timer
   useEffect(() => {
     resetInactivityTimer();
+    setChange(false);
 
     // Cleanup function to clear the timer when the component unmounts
     return () => {
@@ -84,7 +86,7 @@ const App = () => {
         clearTimeout(inactivityTimerRef.current);
       }
     };
-  }, [scores, resetInactivityTimer]);
+  }, [scoreChange, resetInactivityTimer]);
 
   useEffect(() => {
     const fetchScores = async () => {
@@ -96,9 +98,11 @@ const App = () => {
             setTimeout(() => setShowHumanEmojis(false), 15000);
             // Show the video background
             setShowVideoBackground(true);
+            setChange(true);
           } else if (fetchedScores.bot > prevScores.bot) {
             setShowBotEmojis(true);
             setTimeout(() => setShowBotEmojis(false), 15000);
+            setChange(true);
           } else {
             setShowHumanEmojis(false);
             setShowBotEmojis(false);
