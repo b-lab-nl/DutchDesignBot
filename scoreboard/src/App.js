@@ -1,5 +1,5 @@
 // App.js
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import "./App.css";
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:1232";
