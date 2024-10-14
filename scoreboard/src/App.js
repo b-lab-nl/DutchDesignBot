@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import "./App.css";
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:1232";
-const INACTIVITY_TIMEOUT = 4500; //  in milliseconds
+const INACTIVITY_TIMEOUT = 7000; //  in milliseconds
 
 const EMOJIS = {
   human: ["🎉", "🎊", "🥳", "🪅", "🍾"],
@@ -96,10 +96,12 @@ const App = () => {
             setTimeout(() => setShowHumanEmojis(false), 15000);
             // Show the video background
             setShowVideoBackground(true);
-          }
-          if (fetchedScores.bot > prevScores.bot) {
+          } else if (fetchedScores.bot > prevScores.bot) {
             setShowBotEmojis(true);
             setTimeout(() => setShowBotEmojis(false), 15000);
+          } else {
+            setShowHumanEmojis(false);
+            setShowBotEmojis(false);
           }
           return fetchedScores;
         });
