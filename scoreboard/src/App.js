@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:1232";
+const INACTIVITY_TIMEOUT = 10000; //  in milliseconds
 
 const EMOJIS = {
   human: ["🎉", "🎊", "🥳", "🪅", "🍾"],
@@ -58,6 +59,32 @@ const App = () => {
   const [showBotEmojis, setShowBotEmojis] = useState(false);
   const [showVideoBackground, setShowVideoBackground] = useState(false);
   const videoRef = useRef(null);
+
+  // Function to reset the inactivity timer
+  // Reference to hold the inactivity timer ID
+  const inactivityTimerRef = useRef(null);
+  const resetInactivityTimer = useCallback(() => {
+    // Clear any existing timer
+    if (inactivityTimerRef.current) {
+      clearTimeout(inactivityTimerRef.current);
+    }
+    // Set a new timer
+    inactivityTimerRef.current = setTimeout(() => {
+      window.location.reload();
+    }, INACTIVITY_TIMEOUT);
+  }, []);
+
+  // Effect hook to monitor changes and reset the timer
+  useEffect(() => {
+    resetInactivityTimer();
+
+    // Cleanup function to clear the timer when the component unmounts
+    return () => {
+      if (inactivityTimerRef.current) {
+        clearTimeout(inactivityTimerRef.current);
+      }
+    };
+  }, [scores, resetInactivityTimer]);
 
   useEffect(() => {
     const fetchScores = async () => {
