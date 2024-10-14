@@ -22,6 +22,7 @@ gcloud = "^0.18.3"
 anthropic = "^0.34.1"
 fuzzywuzzy = "^0.18.0"
 python-levenshtein = "^0.26.0"
+numpy = "^2.1.2"
 
 [build-system]
 requires = ["poetry-core"]

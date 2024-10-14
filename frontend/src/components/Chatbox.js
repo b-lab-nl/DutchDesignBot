@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./Chatbox.css";
 
-
 function chatbox({
   selectedChallenge,
   selectedSolution,
   botResponse,
+  ogScore,
   isLoading,
 }) {
   const canvasRef = useRef(null);
@@ -24,7 +24,7 @@ function chatbox({
     const drawArrow = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const arrowHeight = 50; // height of the arrow
-      const arrowWidth = 20;  // width of the arrow
+      const arrowWidth = 20; // width of the arrow
 
       // Coordinates for the arrow tip
       const arrowTipX = canvas.width / 2;
@@ -57,7 +57,6 @@ function chatbox({
         opacity -= 0.02;
         if (opacity <= 0) fadingIn = true;
       }
-
     };
 
     const drawText = () => {
@@ -80,13 +79,12 @@ function chatbox({
       }
     };
 
-
     const animate = () => {
-      if (!botResponse && !selectedChallenge)  {
+      if (!botResponse && !selectedChallenge) {
         drawArrow();
         drawText();
-      }else {
-         ctx.clearRect(0, 0, canvas.width, canvas.height);
+      } else {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
       }
 
       animationFrameId = requestAnimationFrame(animate);
@@ -103,7 +101,7 @@ function chatbox({
     container.innerHTML = ""; // Clear previous content
     const words = text.split(" ");
     let index = 0;
-  
+
     function addWord() {
       if (index < words.length) {
         const span = document.createElement("span");
@@ -112,19 +110,19 @@ function chatbox({
         span.style.animation = `fadeIn 0.6s ease forwards`;
         container.appendChild(span);
         index++;
-        
+
         // Use requestAnimationFrame for better performance
-        setTimeout(addWord, 150); 
+        setTimeout(addWord, 150);
       }
     }
-    
+
     addWord();
   }
-  
 
   useEffect(() => {
     if (botResponse) {
-      animateText(botResponse, botResponseRef.current);
+      const ScoreText = `${botResponse}<br>Your OG score: ${ogScore}`;
+      animateText(ScoreText, botResponseRef.current);
     }
   }, [botResponse]);
 
@@ -133,7 +131,7 @@ function chatbox({
       animateText(selectedSolution, humanResponseRef.current);
     }
   }, [selectedSolution]);
-  
+
   useEffect(() => {
     if (!isLoading && canvasContext) {
       canvasContext.clearRect(
@@ -145,15 +143,21 @@ function chatbox({
     }
   }, [isLoading, canvasContext]);
 
-  const wrapperClassName = (selectedChallenge || selectedSolution)
-  ? "chatbox-canvas-wrapper selected"
-  : botResponse
-  ? "chatbox-canvas-wrapper expanded"
-  : "chatbox-canvas-wrapper";
+  const wrapperClassName =
+    selectedChallenge || selectedSolution
+      ? "chatbox-canvas-wrapper selected"
+      : botResponse
+        ? "chatbox-canvas-wrapper expanded"
+        : "chatbox-canvas-wrapper";
 
   return (
     <div className={wrapperClassName}>
-      <canvas ref={canvasRef} width={600} height={400} className="chatbox-canvas" />
+      <canvas
+        ref={canvasRef}
+        width={600}
+        height={400}
+        className="chatbox-canvas"
+      />
       {botResponse && (
         <div className="bot-response-overlay">
           <div ref={botResponseRef} className="word-animation"></div>
@@ -166,5 +170,5 @@ function chatbox({
       )}
     </div>
   );
-};
+}
 export default chatbox;

@@ -17,6 +17,7 @@ function App() {
   const [attemptNumber, setAttemptNumber] = useState(0);
   const [preFilled, setPreFilled] = useState(true);
   const [botResponse, setBotResponse] = useState("");
+  const [oGscore, setOGscore] = useState(0);
   const [showManualInput, setShowManualInput] = useState(false);
   const [audioSrc, setAudioSrc] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -64,7 +65,7 @@ function App() {
       //
       // add a sleep timer here to simulate the user thinking
       //
-      setBotResponse(`. . . . . . .`);
+      setBotResponse(`. . . . . . . . .`);
       setTimeout(() => {
         var botResponseText = `Welcome, I am Aly. ${selectedChallenge}, what a great choice. What solutions \
           do you have in mind to solve some of the issues related to\
@@ -115,6 +116,7 @@ function App() {
       axios
         .post(`${backendUrl}/api/evaluate`, apiPayload)
         .then((response) => {
+          setOGscore(response.data.og_score);
           setBotResponse(response.data.bot_response);
           const audioBase64 = response.data.audio_base64;
           const audioURL = `data:audio/mpeg;base64,${audioBase64}`;
@@ -195,6 +197,7 @@ function App() {
         selectedChallenge={selectedChallenge}
         selectedSolution={selectedSolution}
         botResponse={botResponse}
+        oGscore={oGscore}
         isLoading={isLoading}
       />
       <div className="bottomSeparator"> </div>

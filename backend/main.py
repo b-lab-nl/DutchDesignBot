@@ -22,6 +22,9 @@ from elevenlabs.client import ElevenLabs, AsyncElevenLabs
 import logging
 import argparse
 
+import numpy as np
+from typing import Tuple
+
 # make logger
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -128,7 +131,7 @@ def evaluate(request: EvaluationRequest):
     logger.info(f"Received request: {request}")
 
     # Determine originality
-    originality = check_originality(request.solution)
+    originality, ogscore = check_originality(request.solution)
 
     # Generate bot response
     if request.pre_filled or not originality:
@@ -138,7 +141,7 @@ def evaluate(request: EvaluationRequest):
             logger.error(f"Error in generating sarcastic response: {e}")
             bot_response = f"Seriously, {request.solution}?? Are you even trying?"
         human_score = 0
-        bot_score = 10
+        bot_score = 100
         original = False
     else:
         try:
@@ -146,7 +149,7 @@ def evaluate(request: EvaluationRequest):
         except Exception as e:
             logger.error(f"Error in generating positive response: {e}")
             bot_response = f"Wow, {request.solution} is such a great idea!"
-        human_score = 10
+        human_score = 100
         bot_score = 0
         original = True
 
@@ -163,7 +166,7 @@ def evaluate(request: EvaluationRequest):
     # Generate audio using ElevenLabs
     audio_base64 = generate_audio(bot_response, positive=human_score > 0)
 
-    return {'bot_response': bot_response, 'audio_base64': audio_base64, 'original': original}
+    return {'bot_response': bot_response, 'audio_base64': audio_base64, 'original': original, 'ogscore': ogscore}
 
 @app.post("/api/score", response_model=ScoreResponse)
 async def score():
@@ -191,18 +194,23 @@ async def sound(request: SoundRequest):
     audio_base64 = generate_audio(request.textsnippet)
     return {'audio_base64': audio_base64}
 
-def check_originality(solution):
+def check_originality(solution)->Tuple[bool,int]:
     # Check for previous solutions in the database
-    cursor.execute('SELECT solution FROM answers')
+    cursor.execute('SELECT UNIQUE(solution) FROM answers')
     previous_solutions = [row[0].lower() for row in cursor.fetchall()]
     if solution.lower() in previous_solutions:
-        return False
+        return False, np.random.randint(10, 30)
     # use fuzzywuzzy matching to check for similarity
+    boringscores = []
     for prev_solution in previous_solutions:
-        if fuzz.ratio(solution.lower(), prev_solution) > FUZZY_THRESHOLD:
-            return False
+        boringscore = fuzz.ratio(solution.lower(), prev_solution)
+        boringscores.append(boringscore)
+        if boringscore > FUZZY_THRESHOLD:
+            return False, 100-boringscore
     # Additional originality checks can be added here
-    return True
+    # BE AWARE
+    # return True, 100-max(boringscores) is saver..
+    return True, 100-round(sum(boringscores)/(len(boringscores)+1))
 
 def generate_sarcastic_response(challenge, solution):
     prompt = f"I have selected {challenge} as the world problem. My boring and predictable suggested solution is {solution}."
