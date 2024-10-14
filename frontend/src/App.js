@@ -17,7 +17,7 @@ function App() {
   const [attemptNumber, setAttemptNumber] = useState(0);
   const [preFilled, setPreFilled] = useState(true);
   const [botResponse, setBotResponse] = useState("");
-  const [oGscore, setOGscore] = useState(0);
+  const [oGscore, setOGscore] = useState(null);
   const [showManualInput, setShowManualInput] = useState(false);
   const [audioSrc, setAudioSrc] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -130,7 +130,7 @@ function App() {
           if (!response.data.original) {
             setTimeout(() => {
               audioBoring.play();
-            }, 5000);
+            }, 9000);
           } else {
             // TODO: if response.data.original==true then give party emoji screensaver for 10 seconds,
             // and play glorious music, then restart the session
@@ -140,7 +140,7 @@ function App() {
               // show bored smileys for 5 seconds
               // then reset the screen
               // and attemptNumber to 0
-            }, 5000);
+            }, 9000);
           }
         })
         .catch((error) => console.error("Error:", error))
@@ -182,9 +182,7 @@ function App() {
   };
 
   return (
-    <div
-      className={`App ${showManualInput || attemptNumber >= 2 ? "manual-input-active" : ""}`}
-    >
+    <div className={`App ${showManualInput ? "manual-input-active" : ""}`}>
       <div className="Title">Let's save the world with tech</div>
       {selectedChallenge == null && (
         <TopCarousel

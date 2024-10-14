@@ -83,7 +83,8 @@ try:
         attempt_number INTEGER,
         bot_response TEXT,
         human_score INTEGER,
-        bot_score INTEGER
+        bot_score INTEGER,
+        originality INTEGER
     )''')
     conn.commit()
 
@@ -102,7 +103,8 @@ except:
             attempt_number INTEGER,
             bot_response TEXT,
             human_score INTEGER,
-            bot_score INTEGER
+            bot_score INTEGER,
+            originality INTEGER
         )
     ''')
     conn.commit()
@@ -131,7 +133,7 @@ def evaluate(request: EvaluationRequest):
     logger.info(f"Received request: {request}")
 
     # Determine originality
-    originality, ogscore = check_originality(request.solution)
+    originality, ogscore = check_originality(request.solution, request.pre_filled)
 
     # Generate bot response
     if request.pre_filled or not originality:
@@ -153,12 +155,14 @@ def evaluate(request: EvaluationRequest):
         bot_score = 0
         original = True
 
+    cstring = "(%s, %s, %s, %s, %s, %s, %s, %s, %s)" if DATA_LOCALE == 'gc' else "(?, ?, ?, ?, ?, ?, ?, ?, ?)"
+    base_query_str = f'''
+        INSERT INTO answers (datetime, challenge, solution, pre_filled, attempt_number, bot_response, human_score, bot_score, originality)
+        VALUES {cstring}
+    '''
     try:
-        cursor.execute('''
-            INSERT INTO answers (datetime, challenge, solution, pre_filled, attempt_number, bot_response, human_score, bot_score)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-        ''', (datetime.now().isoformat(), request.challenge, request.solution, 'yes' if request.pre_filled else 'no',
-            request.attempt_number, bot_response, human_score, bot_score))
+        cursor.execute(base_query_str, (datetime.now().isoformat(), request.challenge, request.solution, 'yes' if request.pre_filled else 'no',
+            request.attempt_number, bot_response, human_score, bot_score, ogscore))
         conn.commit()
     except Exception as e:
         logger.error(f"Error in storing the answer in the {DATA_LOCALE} database:{e}")
@@ -166,7 +170,7 @@ def evaluate(request: EvaluationRequest):
     # Generate audio using ElevenLabs
     audio_base64 = generate_audio(bot_response, positive=human_score > 0)
 
-    return {'bot_response': bot_response, 'audio_base64': audio_base64, 'original': original, 'ogscore': ogscore}
+    return {'bot_response': bot_response, 'audio_base64': audio_base64, 'original': original, 'og_score': ogscore}
 
 @app.post("/api/score", response_model=ScoreResponse)
 async def score():
@@ -194,12 +198,17 @@ async def sound(request: SoundRequest):
     audio_base64 = generate_audio(request.textsnippet)
     return {'audio_base64': audio_base64}
 
-def check_originality(solution)->Tuple[bool,int]:
+def check_originality(solution: str, pre_filled: bool)->Tuple[bool,int]:
     # Check for previous solutions in the database
-    cursor.execute('SELECT UNIQUE(solution) FROM answers')
+    if pre_filled:
+        return False, np.random.randint(10, 30)
+
+    # perform exact matching
+    cursor.execute('SELECT DISTINCT(solution) FROM answers')
     previous_solutions = [row[0].lower() for row in cursor.fetchall()]
     if solution.lower() in previous_solutions:
-        return False, np.random.randint(10, 30)
+        return False, np.random.randint(20, 50)
+
     # use fuzzywuzzy matching to check for similarity
     boringscores = []
     for prev_solution in previous_solutions:
@@ -207,9 +216,11 @@ def check_originality(solution)->Tuple[bool,int]:
         boringscores.append(boringscore)
         if boringscore > FUZZY_THRESHOLD:
             return False, 100-boringscore
+
     # Additional originality checks can be added here
     # BE AWARE
     # return True, 100-max(boringscores) is saver..
+    # TODO: add average over semantic similarities..
     return True, 100-round(sum(boringscores)/(len(boringscores)+1))
 
 def generate_sarcastic_response(challenge, solution):

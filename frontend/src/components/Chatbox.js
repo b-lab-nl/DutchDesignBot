@@ -5,7 +5,7 @@ function chatbox({
   selectedChallenge,
   selectedSolution,
   botResponse,
-  ogScore,
+  oGscore,
   isLoading,
 }) {
   const canvasRef = useRef(null);
@@ -121,10 +121,16 @@ function chatbox({
 
   useEffect(() => {
     if (botResponse) {
-      const ScoreText = `${botResponse}<br>Your OG score: ${ogScore}`;
+      let ScoreText;
+      if (oGscore !== null && oGscore !== undefined) {
+        // add right arrow and OG score to the bot response
+        ScoreText = `${botResponse} => Your OG score: ${oGscore}`;
+      } else {
+        ScoreText = botResponse;
+      }
       animateText(ScoreText, botResponseRef.current);
     }
-  }, [botResponse]);
+  }, [botResponse, oGscore]);
 
   useEffect(() => {
     if (selectedSolution) {
