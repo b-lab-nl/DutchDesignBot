@@ -38,7 +38,8 @@
     background-color: azure;
     border-radius: 50px;
     height: 75px;
-    width: 600px;
+    /* width: 600px; */
+    padding-inline: 36px;
     margin: 10px;
     color: #000000; /* Matrix green */
     font-family: "Space Grotesk";
