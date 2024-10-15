@@ -90,7 +90,7 @@ gcloud run deploy dutchdesignbot \
     ...
 ```
 
-Then install the dependencies and start the services with
+Then install the dependencies and, for the local testing, start the services with
 ```bash
 poetry install
 
@@ -100,10 +100,11 @@ npm start
 
 cd ../scoreboard
 npm install
-npm start
+PORT=4000 npm start
 
 cd ../backend
-./start_chat.sh --config_file ../settings.yaml
+poetry shell
+python3 main.py --local
 ```
 
 with a ```settings.yaml``` like

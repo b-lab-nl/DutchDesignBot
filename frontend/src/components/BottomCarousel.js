@@ -25,6 +25,8 @@ function BottomCarousel(props) {
     setShowManualInput,
     canSubmitNewSolution,
     attemptNumber,
+    isHoveredOnOther,
+    setIsHoveredOnOther,
   } = props;
 
   // Append with Other
@@ -56,7 +58,7 @@ function BottomCarousel(props) {
   return (
     <div className="bottom-carousel-div">
       <div
-        className={`bottom-carousel active ${showManualInput ? "manual-input-active" : ""}`}
+        className={`bottom-carousel active ${showManualInput || isHoveredOnOther ? "manual-input-active" : ""}`}
       >
         <div className="carousel-content-bottom">
           <SolutionSelection
@@ -70,6 +72,7 @@ function BottomCarousel(props) {
             selectedSolution={selectedSolution}
             handleSolutionClick={handleSolutionClick}
             selectedChallenge={selectedChallenge}
+            setIsHoveredOnOther={setIsHoveredOnOther}
           />
         </div>
       </div>

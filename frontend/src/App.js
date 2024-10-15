@@ -25,6 +25,7 @@ function App() {
   const [canSubmitNewSolution, setCanSubmitNewSolution] = useState(true);
   const [isBored, setIsBored] = useState(false);
   const [lastSelectedSolution, setLastSelectedSolution] = useState(null);
+  const [isHoveredOnOther, setIsHoveredOnOther] = useState(false);
 
   const audioBoring = new Audio("/assets/boring.wav");
   const audioOG = new Audio("/assets/og.wav");
@@ -189,7 +190,9 @@ function App() {
   };
 
   return (
-    <div className={`App ${showManualInput ? "manual-input-active" : ""}`}>
+    <div
+      className={`App ${showManualInput || isHoveredOnOther ? "manual-input-active" : ""}`}
+    >
       <div className="Title">Let's save the world with tech</div>
       {selectedChallenge == null && (
         <TopCarousel
@@ -217,6 +220,8 @@ function App() {
           setShowManualInput={setShowManualInput}
           canSubmitNewSolution={canSubmitNewSolution}
           attemptNumber={attemptNumber}
+          isHoveredOnOther={isHoveredOnOther}
+          setIsHoveredOnOther={setIsHoveredOnOther}
         />
       )}
       {isBored && <BoredEmoticons />}

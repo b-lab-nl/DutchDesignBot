@@ -10,7 +10,7 @@
     width: 900px;
     max-height: 600px;
     overflow: hidden;
-    background-color: #2bb673;
+    background-color: transparent;
     padding: 10px 0;
     display: none;
 }
@@ -18,10 +18,10 @@
     display: block;
     transition: background-color 0.6s ease-in-out 0.5s;
 }
-.bottom-carousel.active.manual-input-active {
+/* .bottom-carousel.active.manual-input-active {
     background-color: #a2b0fe;
-    transition: background-color 0.6s ease-in-out 0.5s;
-}
+    transition: background-color 0.6s ease-in-out 0.5s;} */
+
 .carousel-content-bottom {
     position: relative;
     height: 100%;
@@ -78,10 +78,6 @@
     background-color: #f0f0f0; /* Keep background color same */
     transform: none; /* Prevent any scaling on hover */
     text-shadow: none; /* No text-shadow on hover */
-}
-
-.bg_change {
-    background-color: #a2b0fe; /* Change this to your desired color */
 }
 
 /* Manual input styling */

@@ -11,9 +11,8 @@ const SolutionSelection = ({
   selectedSolution,
   handleSolutionClick,
   selectedChallenge,
+  setIsHoveredOnOther,
 }) => {
-  const [isHoveredOnOther, setIsHoveredOnOther] = useState(false);
-
   const handleMouseEnter = (solution) => {
     if (solution === "Other") {
       setIsHoveredOnOther(true);
@@ -62,6 +61,8 @@ const SolutionSelection = ({
               selectedSolution === solution ? "selected" : ""
             } ${!canSubmitNewSolution ? "disabled" : ""}`}
             onClick={() => handleSolutionClick(solution)}
+            onMouseEnter={() => handleMouseEnter(solution)}
+            onMouseLeave={() => handleMouseLeave(solution)}
           >
             {solution}
           </div>
