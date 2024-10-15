@@ -97,7 +97,7 @@ function App() {
 
       setTimeout(() => {
         setCanSubmitNewSolution(true);
-      }, 7500);
+      }, 10000);
 
       setShowBottomCarousel(true);
     } else if (selectedChallenge && selectedSolution === "") {
@@ -157,7 +157,7 @@ function App() {
 
   setTimeout(() => {
     setCanSubmitNewSolution(true);
-  }, 7500);
+  }, 11000);
 
   useEffect(() => {
     makeApiCall();
