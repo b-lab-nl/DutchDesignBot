@@ -23,6 +23,7 @@
 .topSeparator {
     height: 100px;
 }
+
 .bottomSeperator {
     height: 100px;
 }
@@ -30,9 +31,9 @@
 .Title {
     width: 100%;
     align-items: center;
-    /* height:50px; */
+    text-transform: uppercase;
     margin-top: 150px;
-    font-size: 100px;
+    font-size: 75px;
     font-family: "Inter";
     padding-bottom: 90px;
 }
@@ -41,8 +42,11 @@
     position: fixed;
     bottom: 0;
     width: 100%;
-    color: rgb(255, 255, 255);
-    font-family: "Courier New", Courier, monospace;
-    font-size: 1.5em;
+    height: 110px;    color: rgb(255, 255, 255);
+    font-family: "Space Grotesk", Courier, monospace;
+    text-transform: uppercase;
+    font-weight: 400;
+    font-size: 24px;
+    padding: 1rem;
     background-color: rgba(0, 0, 0, 0.982);
 }

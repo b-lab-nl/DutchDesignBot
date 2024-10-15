@@ -226,7 +226,7 @@ function App() {
         />
       )}
       {isBored && <BoredEmoticons />}
-      <div className="FooterBar">Hint, put on the headphones 🎧</div>
+      <div className="FooterBar">Hint__put on the headphones 🎧</div>
     </div>
   );
 }
