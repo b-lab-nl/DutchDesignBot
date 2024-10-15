@@ -4,7 +4,7 @@
     position: relative;
     width: 100%;
     overflow: hidden;
-    background-color: #2BB673;
+    background-color: #2bb673;
     padding: 10px 0;
 }
 
@@ -16,8 +16,8 @@
 
 .challengeText {
     font-size: 1em;
-    color: #000000; 
-    font-family: 'Inter', 'Lora', monospace;
+    color: #000000;
+    font-family: "Inter", "Lora", monospace;
     /* font-family: 'Space Grotesk'; */
     text-align: center;
     margin-top: 0px;
@@ -27,18 +27,17 @@
     animation: flicker 0.5s infinite alternate;
 }
 
-.challengeText:hover{
+.challengeText:hover {
     animation-play-state: paused;
     background-color: #ffffff;
 }
 
-
 .carousel-item {
     display: inline-block;
-    background-color: #2BB673;
+    background-color: #2bb673;
     padding: 10px 20px;
     color: #000000;
-    font-family: 'Inter', 'Lora', monospace;
+    font-family: "Inter", "Lora", monospace;
     font-size: 2em;
     cursor: pointer;
     transition:
@@ -51,14 +50,14 @@
 }
 .carousel-item:hover {
     transform: scale(1.1);
-    border-color: #8F70F7;
+    border-color: #8f70f7;
     border-width: 5px;
     text-shadow: 0 0 10px #ffffff;
 }
 
-.carousel-item.selected .challengeText{
-    background-color: #8F70F7;
-    box-shadow: 0 0 10px #8F70F7;
+.carousel-item.selected .challengeText {
+    background-color: #8f70f7;
+    box-shadow: 0 0 10px #8f70f7;
     animation-play-state: paused;
 }
 
@@ -74,9 +73,9 @@
 
 @keyframes flicker {
     0% {
-      background-color: #ffffff;
+        background-color: #ffffff;
     }
     100% {
-      background-color: #2BB673;
+        background-color: #2bb673;
     }
-  }
+}

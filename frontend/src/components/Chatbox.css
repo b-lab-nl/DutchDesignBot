@@ -36,7 +36,7 @@
     border: rgba(48, 154, 64, 0.6);
     border-radius: 10%;
     color: #000000;
-    font-family: "Lora", "Inter", monospace;
+    font-family: "Inter", "Lora", monospace;
     font-size: 50px;
     display: flex;
     align-items: left;
@@ -59,7 +59,7 @@
     border: rgba(48, 154, 64, 0.6);
     border-radius: 100px;
     color: #000000;
-    font-family: "Lora", "Inter", monospace;
+    font-family: "Inter", "Lora", monospace;
     font-size: 45px;
     display: flex;
     align-items: right;
