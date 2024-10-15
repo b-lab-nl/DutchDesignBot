@@ -65,6 +65,21 @@
 .carousel-item-bottom.button:hover {
     background-color: #9f0;
 }
+/* disable effects for disabled items */
+.carousel-item-bottom.disabled {
+    pointer-events: none; /* Disable click events */
+    cursor: default; /* Set cursor to default */
+    background-color: #f0f0f0; /* Optional: Change background color to indicate disabled */
+    transform: none; /* Remove any scaling */
+    text-shadow: none; /* Remove text shadow */
+}
+
+.carousel-item-bottom.disabled:hover,
+.carousel-item-bottom.disabled:focus {
+    background-color: #f0f0f0; /* Keep background color same */
+    transform: none; /* Prevent any scaling on hover */
+    text-shadow: none; /* No text-shadow on hover */
+}
 
 /* Manual input styling */
 .manual-input {

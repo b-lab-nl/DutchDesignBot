@@ -65,8 +65,9 @@ function App() {
       //
       // add a sleep timer here to simulate the user thinking
       //
-      setBotResponse(`. . . . . . . . .`);
+      setBotResponse(`. . . . . . . . . .`);
       setTimeout(() => {
+        setCanSubmitNewSolution(false);
         var botResponseText = `Welcome, I am Aly. ${selectedChallenge}, what a great choice. What solutions \
           do you have in mind to solve some of the issues related to\
               ${selectedChallenge}?`;
@@ -95,9 +96,13 @@ function App() {
           });
       }, 2500);
 
+      setTimeout(() => {
+        setCanSubmitNewSolution(true);
+      }, 3000);
+
       setShowBottomCarousel(true);
     } else if (selectedChallenge && selectedSolution === "") {
-      setBotResponse("You will need to fill in text here...");
+      setBotResponse("Be creative and get a super OG score");
     } else if (selectedChallenge && selectedSolution !== "") {
       // if selectedSolution===lastSelectedSolution, set isBored to true
 

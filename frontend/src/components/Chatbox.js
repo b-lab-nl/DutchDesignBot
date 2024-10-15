@@ -105,17 +105,24 @@ function chatbox({
     function addWord() {
       if (index < words.length) {
         const span = document.createElement("span");
-        span.textContent = words[index] + " ";
-        span.style.opacity = "0";
-        span.style.animation = `fadeIn 0.6s ease forwards`;
-        container.appendChild(span);
+        const word = words[index];
+
+        if (word === "\n") {
+          // Create a line break if we encounter a new line marker
+          container.appendChild(document.createElement("br"));
+        } else {
+          const span = document.createElement("span");
+          span.textContent = word + " ";
+          span.style.opacity = "0";
+          span.style.animation = `fadeIn 0.6s ease forwards`;
+          container.appendChild(span);
+        }
         index++;
 
         // Use requestAnimationFrame for better performance
         setTimeout(addWord, 150);
       }
     }
-
     addWord();
   }
 
@@ -124,7 +131,7 @@ function chatbox({
       let ScoreText;
       if (oGscore !== null && oGscore !== undefined) {
         // add right arrow and OG score to the bot response
-        ScoreText = `${botResponse} => Your OG score: ${oGscore}`;
+        ScoreText = `${botResponse} \n => Your OG score is now: ${oGscore}`;
       } else {
         ScoreText = botResponse;
       }
