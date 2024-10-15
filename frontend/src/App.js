@@ -97,7 +97,7 @@ function App() {
 
       setTimeout(() => {
         setCanSubmitNewSolution(true);
-      }, 6000);
+      }, 7500);
 
       setShowBottomCarousel(true);
     } else if (selectedChallenge && selectedSolution === "") {
@@ -151,10 +151,13 @@ function App() {
         .finally(() => {
           setIsLoading(false);
           setShowBottomCarousel(true);
-          setCanSubmitNewSolution(true);
         });
     }
   }, [selectedChallenge, selectedSolution, preFilled, attemptNumber]);
+
+  setTimeout(() => {
+    setCanSubmitNewSolution(true);
+  }, 7500);
 
   useEffect(() => {
     makeApiCall();

@@ -3,7 +3,7 @@
 .chatbox-canvas-wrapper {
     position: relative;
     width: 1200px; /* Initial width */
-    height: 600px;
+    height: 900px;
     margin: 20px auto;
     border: 0px solid #2bb673;
     transition: width 0.5s ease; /* Animate width change */
@@ -44,7 +44,7 @@
     text-align: left;
     padding: 10px;
     background-color: #2bb673;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .human-response-overlay {
@@ -64,7 +64,7 @@
     justify-content: center;
     padding: 10px;
     background-color: rgba(208, 226, 185, 0.6);
-    overflow: hidden;
+    overflow: visible;
 }
 
 .word-animation span {
