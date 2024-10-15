@@ -80,6 +80,10 @@
     text-shadow: none; /* No text-shadow on hover */
 }
 
+.bg_change {
+    background-color: #a2b0fe; /* Change this to your desired color */
+}
+
 /* Manual input styling */
 .manual-input {
     width: 600px;

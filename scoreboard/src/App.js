@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import "./App.css";
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:1232";
-const INACTIVITY_TIMEOUT = 600000; //  in milliseconds
+const INACTIVITY_TIMEOUT = 600_000; //  in milliseconds
 
 const EMOJIS = {
   human: ["🎉", "🎊", "🥳", "🪅", "🍾"],

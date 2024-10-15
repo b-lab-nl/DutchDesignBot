@@ -86,7 +86,8 @@ h1 {
 .score-bot {
     margin-top: 10px;
     font-family: Inter;
-    font-size: 575px;
+    font-size: calc(5vw + 1rem); /* scales based on viewport */
+    white-space: nowrap; /* prevent wrapping */
 }
 
 .error {
@@ -108,7 +109,7 @@ h1 {
     position: absolute;
     z-index: 1000;
     top: -20px;
-    font-size: 44px;
+    font-size: 64px;
     animation: fall linear infinite;
 }
 

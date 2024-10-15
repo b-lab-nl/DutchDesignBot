@@ -99,7 +99,8 @@ function chatbox({
 
   function animateText(text, container) {
     container.innerHTML = ""; // Clear previous content
-    const words = text.split(" ");
+    //const words = text.split(" ");
+    const words = text.split(/(\s+|\n)/); // Split by spaces or newlines
     let index = 0;
 
     function addWord() {
