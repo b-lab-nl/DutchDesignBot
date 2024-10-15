@@ -1,5 +1,19 @@
 import React from "react";
 
+document.querySelectorAll(".carousel-item-bottom").forEach((item) => {
+  item.addEventListener("mouseenter", function () {
+    if (item.textContent.trim() === "Other") {
+      document.querySelector(".App").classList.add("bg_change");
+    }
+  });
+
+  item.addEventListener("mouseleave", function () {
+    if (item.textContent.trim() === "Other") {
+      document.querySelector(".App").classList.remove("bg_change");
+    }
+  });
+});
+
 const SolutionSelection = ({
   attemptNumber,
   showManualInput,
