@@ -2,8 +2,8 @@
 
 .chatbox-canvas-wrapper {
     position: relative;
-    width: 1200px; /* Initial width */
-    height: 900px;
+    max-width: 1200px; /* Initial width */
+    max-height: 900px;
     margin: 20px auto;
     border: 0px solid #2bb673;
     transition: width 0.5s ease; /* Animate width change */
@@ -15,7 +15,7 @@
 }
 
 .chatbox-canvas-wrapper.expanded {
-    width: 1200px; /* Expanded width when botResponse is present */
+    max-width: 1200px; /* Expanded width when botResponse is present */
     max-height: 900px;
     border: 1px solid #2bff00;
 }
@@ -39,7 +39,8 @@
     font-family: "Inter", "Lora", monospace;
     font-size: 50px;
     display: flex;
-    align-items: center;
+    align-items: left;
+    text-align: left;
     justify-content: center;
     text-align: left;
     padding: 10px;
@@ -60,7 +61,8 @@
     font-family: "Inter", "Lora", monospace;
     font-size: 50px;
     display: flex;
-    align-items: center;
+    align-items: right;
+    text-align: right;
     justify-content: center;
     padding: 10px;
     background-color: rgba(208, 226, 185, 0.6);

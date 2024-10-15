@@ -6,6 +6,7 @@ function chatbox({
   selectedSolution,
   botResponse,
   oGscore,
+  attemptNumber,
   isLoading,
 }) {
   const canvasRef = useRef(null);
@@ -99,31 +100,104 @@ function chatbox({
 
   function animateText(text, container) {
     container.innerHTML = ""; // Clear previous content
-    //const words = text.split(" ");
-    const words = text.split(/(\s+|\n)/); // Split by spaces or newlines
+
+    // Split the text into words, preserving spaces and tabs, but not line breaks
+    const words = text.split(/([ \t]+)/);
+
     let index = 0;
+    let wordCount = 0; // Initialize word counter
+    let justAddedLineBreak = false; // Flag to track line breaks
 
     function addWord() {
       if (index < words.length) {
-        const span = document.createElement("span");
-        const word = words[index];
+        let word = words[index];
 
-        if (word === "\n") {
-          // Create a line break if we encounter a new line marker
-          container.appendChild(document.createElement("br"));
+        if (word.includes("\n")) {
+          // Split the word further on line breaks
+          const parts = word.split("\n");
+
+          parts.forEach((part, i) => {
+            if (part) {
+              // Trim leading spaces from the part
+              if (justAddedLineBreak) {
+                part = part.replace(/^[ \t]+/, "");
+              }
+
+              // Add the word part
+              const span = document.createElement("span");
+              span.textContent = part;
+              span.style.opacity = "0";
+              span.style.animation = `fadeIn 0.6s ease forwards`;
+              container.appendChild(span);
+
+              if (part.trim() !== "") {
+                wordCount++;
+                justAddedLineBreak = false; // Reset flag after adding a word
+              }
+
+              // After adding the word, check if we need to add a line break
+              if (wordCount >= 5) {
+                container.appendChild(document.createElement("br"));
+                wordCount = 0; // Reset word count
+                justAddedLineBreak = true; // Set flag after adding line break
+              }
+            }
+
+            if (i < parts.length - 1) {
+              // Add a line break when encountering a '\n'
+              container.appendChild(document.createElement("br"));
+              wordCount = 0; // Reset word count due to existing line break
+              justAddedLineBreak = true; // Set flag after adding line break
+            }
+          });
+        } else if (word.trim() === "") {
+          // Handle spaces and tabs
+          if (!justAddedLineBreak) {
+            const span = document.createElement("span");
+            span.innerHTML = "&nbsp;";
+            span.style.opacity = "0";
+            span.style.animation = `fadeIn 0.6s ease forwards`;
+            container.appendChild(span);
+          }
         } else {
+          // Trim leading spaces if a line break was just added
+          if (justAddedLineBreak) {
+            word = word.replace(/^[ \t]+/, "");
+            justAddedLineBreak = false; // Reset flag after adding a word
+          }
+
+          // Regular word
           const span = document.createElement("span");
-          span.textContent = word + " ";
+          span.textContent = word;
           span.style.opacity = "0";
           span.style.animation = `fadeIn 0.6s ease forwards`;
           container.appendChild(span);
+
+          wordCount++;
+
+          // After adding the word, check if we need to add a line break
+          if (wordCount >= 5) {
+            container.appendChild(document.createElement("br"));
+            wordCount = 0; // Reset word count
+            justAddedLineBreak = true; // Set flag after adding line break
+          }
         }
+
         index++;
 
-        // Use requestAnimationFrame for better performance
+        // Skip any spaces or tabs immediately after a line break
+        if (justAddedLineBreak) {
+          // Look ahead to the next word
+          while (index < words.length && words[index].trim() === "") {
+            index++;
+          }
+        }
+
+        // Use requestAnimationFrame or setTimeout for better performance
         setTimeout(addWord, 150);
       }
     }
+
     addWord();
   }
 
@@ -132,7 +206,7 @@ function chatbox({
       let ScoreText;
       if (oGscore !== null && oGscore !== undefined) {
         // add right arrow and OG score to the bot response
-        ScoreText = `${botResponse} \n\n=> Your OG score is now: ${oGscore}`;
+        ScoreText = `${botResponse} \n\nOG score: ${oGscore}. \nAttempt number: ${attemptNumber}`;
       } else {
         ScoreText = botResponse;
       }

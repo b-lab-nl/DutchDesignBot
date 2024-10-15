@@ -67,9 +67,9 @@ function App() {
       // add a sleep timer here to simulate the user thinking
       //
       setCanSubmitNewSolution(false);
-      setBotResponse(`. . . . . . . . . .`);
+      setBotResponse(`. . . . . . . .`);
       setTimeout(() => {
-        var botResponseText = `Welcome, I am Aly. ${selectedChallenge}, what a great choice. What solutions \
+        var botResponseText = `Welcome, I am Aly. \n${selectedChallenge}, what a great choice. What solutions \
           do you have in mind to solve some of the issues related to\
               ${selectedChallenge}?`;
 
@@ -206,6 +206,7 @@ function App() {
         selectedSolution={selectedSolution}
         botResponse={botResponse}
         oGscore={oGscore}
+        attemptNumber={attemptNumber}
         isLoading={isLoading}
       />
       <div className="bottomSeparator"> </div>
