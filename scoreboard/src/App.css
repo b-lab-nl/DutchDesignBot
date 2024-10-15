@@ -86,7 +86,7 @@ h1 {
 .score-bot {
     margin-top: 10px;
     font-family: Inter;
-    font-size: calc(5vw + 1rem); /* scales based on viewport */
+    font-size: calc(8vw + 1rem); /* scales based on viewport */
     white-space: nowrap; /* prevent wrapping */
 }
 

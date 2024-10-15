@@ -9,7 +9,7 @@ import "./App.css";
 import axios from "axios";
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:1232";
-const INACTIVITY_TIMEOUT = 60000; // 30 seconds in milliseconds
+const INACTIVITY_TIMEOUT = 60_000; // 30 seconds in milliseconds
 
 function App() {
   const [selectedChallenge, setSelectedChallenge] = useState(null);
