@@ -84,14 +84,11 @@
 
 /* disable effects for disabled items */
 .carousel-item-bottom.disabled {
-    pointer-events: none;
-    /* Disable click events */
-    cursor: default;
-    /* Set cursor to default */
-    transform: none;
-    /* Remove any scaling */
-    text-shadow: none;
-    /* Remove text shadow */
+    pointer-events: none; /* Disable click events */
+    cursor: default; /* Set cursor to default */
+    transform: none; /* Remove any scaling */
+    text-shadow: none; /* Remove text shadow */
+    opacity: 0.65;
 }
 
 .carousel-item-bottom.disabled:hover,

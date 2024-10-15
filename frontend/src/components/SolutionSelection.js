@@ -12,6 +12,7 @@ const SolutionSelection = ({
   handleSolutionClick,
   selectedChallenge,
   setIsHoveredOnOther,
+  selectedSolutions,
 }) => {
   const handleMouseEnter = (solution) => {
     if (solution === "Other") {
@@ -54,19 +55,29 @@ const SolutionSelection = ({
   } else {
     return (
       <div className="base-solutions-container">
-        {base_solutions.map((solution, index) => (
-          <div
-            key={index}
-            className={`carousel-item-bottom ${
-              selectedSolution === solution ? "selected" : ""
-            } ${!canSubmitNewSolution ? "disabled" : ""}`}
-            onClick={() => handleSolutionClick(solution)}
-            onMouseEnter={() => handleMouseEnter(solution)}
-            onMouseLeave={() => handleMouseLeave(solution)}
-          >
-            {solution}
-          </div>
-        ))}
+        {base_solutions.map((solution, index) => {
+          const isSelected = selectedSolutions.includes(solution);
+          const isDisabled = !canSubmitNewSolution || isSelected;
+
+          return (
+            <div
+              key={index}
+              className={`carousel-item-bottom ${
+                selectedSolution === solution ? "selected" : ""
+              } ${isDisabled ? "disabled" : ""}`}
+              onClick={() => {
+                if (!isDisabled) {
+                  handleSolutionClick(solution);
+                }
+              }}
+              onMouseEnter={() => handleMouseEnter(solution)}
+              onMouseLeave={() => handleMouseLeave(solution)}
+              style={{ cursor: isDisabled ? "not-allowed" : "pointer" }}
+            >
+              {solution}
+            </div>
+          );
+        })}
       </div>
     );
   }

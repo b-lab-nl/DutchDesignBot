@@ -45,7 +45,7 @@
     text-align: left;
     padding: 30px;
     margin-left: 140px;
-    /* background-color: #2bb673; */
+    background-color: transparent;
     overflow: visible;
 }
 
@@ -67,7 +67,7 @@
     justify-content: center;
     padding: 30px;
     margin-right: 140px;
-    background-color: rgba(208, 226, 185, 0.6);
+    background-color: transparent;
     overflow: visible;
 }
 

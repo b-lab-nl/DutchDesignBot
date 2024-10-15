@@ -31,6 +31,7 @@ function BottomCarousel(props) {
 
   // Append with Other
   const base_solutions = base_solutions_dict[selectedChallenge].concat("Other");
+  const [selectedSolutions, setSelectedSolutions] = useState([]);
 
   const [manualSolution, setManualSolution] = useState("");
 
@@ -43,6 +44,11 @@ function BottomCarousel(props) {
       } else {
         setSelectedSolution(solution);
         setPreFilled(true);
+        // Add selected solution to the list
+        setSelectedSolutions((prevSelectedSolutions) => [
+          ...prevSelectedSolutions,
+          solution,
+        ]);
       }
     }
   };
@@ -73,6 +79,7 @@ function BottomCarousel(props) {
             handleSolutionClick={handleSolutionClick}
             selectedChallenge={selectedChallenge}
             setIsHoveredOnOther={setIsHoveredOnOther}
+            selectedSolutions={selectedSolutions}
           />
         </div>
       </div>

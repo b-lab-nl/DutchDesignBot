@@ -206,7 +206,7 @@ function chatbox({
       let ScoreText;
       if (oGscore !== null && oGscore !== undefined) {
         // add right arrow and OG score to the bot response
-        ScoreText = `${botResponse} \n\nOG score: ${oGscore}. \nAttempt number: ${attemptNumber}`;
+        ScoreText = `${botResponse} \n\nOriginality score: ${oGscore}% \nAttempt number: ${attemptNumber}`;
       } else {
         ScoreText = botResponse;
       }

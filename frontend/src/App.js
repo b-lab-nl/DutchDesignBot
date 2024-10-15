@@ -4,6 +4,7 @@ import BottomCarousel from "./components/BottomCarousel";
 import Chatbox from "./components/Chatbox";
 import BoredEmoticons from "./components/BoredEmoticons";
 import SolutionSelection from "./components/SolutionSelection";
+import ReactConfetti from "react-confetti";
 
 import "./App.css";
 import axios from "axios";
@@ -18,6 +19,7 @@ function App() {
   const [preFilled, setPreFilled] = useState(true);
   const [botResponse, setBotResponse] = useState("");
   const [oGscore, setOGscore] = useState(null);
+  const [victory, setVictory] = useState(false);
   const [showManualInput, setShowManualInput] = useState(false);
   const [audioSrc, setAudioSrc] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -29,6 +31,7 @@ function App() {
 
   const audioBoring = new Audio("/assets/boring.wav");
   const audioOG = new Audio("/assets/og.wav");
+  const audioVictory = new Audio("/assets/victory.wav");
 
   // Reference to hold the inactivity timer ID
   const inactivityTimerRef = useRef(null);
@@ -57,6 +60,19 @@ function App() {
     };
   }, [selectedChallenge, selectedSolution, resetInactivityTimer]);
 
+  useEffect(() => {
+    if (victory) {
+      // Optional: Display a message or animation here
+      // Then reset the game after a delay
+      const resetTimeout = setTimeout(() => {
+        window.location.reload();
+      }, 10_000); // Adjust the delay as needed
+
+      // Cleanup timeout if the component unmounts
+      return () => clearTimeout(resetTimeout);
+    }
+  }, [victory]);
+
   const makeApiCall = useCallback(() => {
     console.log("Challenge:", selectedChallenge);
     console.log("Solution:", selectedSolution);
@@ -67,7 +83,7 @@ function App() {
       // add a sleep timer here to simulate the user thinking
       //
       setCanSubmitNewSolution(false);
-      setBotResponse(`. . . . . . . .`);
+      setBotResponse(`. . . . . . . . . .`);
       setTimeout(() => {
         var botResponseText = `Welcome, I am Aly. \n${selectedChallenge}, what a great choice. What solutions \
           do you have in mind to solve some of the issues related to\
@@ -102,7 +118,7 @@ function App() {
 
       setShowBottomCarousel(true);
     } else if (selectedChallenge && selectedSolution === "") {
-      setBotResponse("Be creative and get a super OG score");
+      setBotResponse("Be creative and get a super originality score");
     } else if (selectedChallenge && selectedSolution !== "") {
       // if selectedSolution===lastSelectedSolution, set isBored to true
 
@@ -130,21 +146,16 @@ function App() {
           const audio = new Audio(audioURL);
           audio.play();
 
-          // TODO: if response.data.original==false then give bored emoji screensaver for 10 seconds,
-          // and play bored music for 10 seconds, then reset screen and attemptNumber to 0
           if (!response.data.original) {
             setTimeout(() => {
               audioBoring.play();
+              setIsBored(true);
             }, 9000);
           } else {
-            // TODO: if response.data.original==true then give party emoji screensaver for 10 seconds,
-            // and play glorious music, then restart the session
-            // wait for 5s before playing the glorious music
             setTimeout(() => {
               audioOG.play();
-              // show bored smileys for 5 seconds
-              // then reset the screen
-              // and attemptNumber to 0
+              setVictory(true);
+              audioVictory.play();
             }, 9000);
           }
         })
@@ -191,7 +202,7 @@ function App() {
 
   return (
     <div
-      className={`App ${showManualInput || isHoveredOnOther ? "manual-input-active" : ""}`}
+      className={`App ${showManualInput || isHoveredOnOther ? "manual-input-active" : ""} ${victory ? "victory" : ""}`}
     >
       <div className="Title">Let's save the world with tech</div>
       {selectedChallenge == null && (
@@ -224,6 +235,15 @@ function App() {
           isHoveredOnOther={isHoveredOnOther}
           setIsHoveredOnOther={setIsHoveredOnOther}
         />
+      )}
+
+      {/* Victory Message */}
+      {/* Victory Message */}
+      {victory && (
+        <>
+          <div className="victory-message">You are a genius!</div>
+          <ReactConfetti />
+        </>
       )}
       {isBored && <BoredEmoticons />}
       <div className="FooterBar">Hint__put on the headphones 🎧</div>

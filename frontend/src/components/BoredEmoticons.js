@@ -9,7 +9,7 @@ const BoredEmoticons = () => {
       const newEmoticon = {
         id: Math.random(),
         left: Math.random() * 100,
-        animationDuration: 3 + Math.random() * 2,
+        animationDuration: 6 + Math.random() * 2,
       };
       setEmoticons((prev) => [...prev, newEmoticon]);
     };
@@ -18,7 +18,7 @@ const BoredEmoticons = () => {
     const cleanup = setTimeout(() => {
       clearInterval(interval);
       setEmoticons([]);
-    }, 3000);
+    }, 8_000);
 
     return () => {
       clearInterval(interval);
