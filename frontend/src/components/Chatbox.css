@@ -31,19 +31,20 @@
     top: 50px;
     left: 20px;
     padding: 5px;
-    max-width: 70%;
-    max-height: 80%;
+    /* max-width: 70%; */
+    /* max-height: 80%; */
     border: rgba(48, 154, 64, 0.6);
     border-radius: 10%;
     color: #000000;
-    font-family: "Inter", "Lora", monospace;
+    font-family: "Lora", "Inter", monospace;
     font-size: 50px;
     display: flex;
     align-items: left;
     text-align: left;
     justify-content: center;
     text-align: left;
-    padding: 10px;
+    padding: 30px;
+    margin-left: 140px;
     background-color: transparent;
     overflow: visible;
 }
@@ -52,19 +53,20 @@
     position: absolute;
     bottom: 50px;
     right: 20px;
-    max-width: 70%;
-    max-height: 60;
-    height: 200px;
+    /* max-width: 70%; */
+    /* max-height: 60; */
+    /* height: 200px; */
     border: rgba(48, 154, 64, 0.6);
-    border-radius: 10%;
+    border-radius: 100px;
     color: #000000;
-    font-family: "Inter", "Lora", monospace;
-    font-size: 50px;
+    font-family: "Lora", "Inter", monospace;
+    font-size: 45px;
     display: flex;
     align-items: right;
     text-align: right;
     justify-content: center;
-    padding: 10px;
+    padding: 30px;
+    margin-right: 140px;
     background-color: transparent;
     overflow: visible;
 }

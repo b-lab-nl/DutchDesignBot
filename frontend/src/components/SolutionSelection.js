@@ -31,7 +31,7 @@ const SolutionSelection = ({
       <div className="manual-input-container">
         <div className="manual-input">
           <div className="manual-input-header">
-            ENTER AN UNEXPECTED SOLUTION
+            Enter an unexpected solution
           </div>
           <div>
             <input
