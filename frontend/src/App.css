@@ -1,7 +1,9 @@
 /* App.css */
 
 body {
-    cursor: url("../public/assets/wolkjecursor.png") 57 60, auto;
+    cursor:
+        url("../public/assets/wolkjecursor.png") 57 60,
+        auto;
 }
 
 .App {
@@ -60,7 +62,7 @@ body {
     font-size: 24px;
     padding: 1rem;
     background-color: rgba(0, 0, 0, 0.982);
-
+}
 /* App.css */
 
 @keyframes pulsate {
