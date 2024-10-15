@@ -131,7 +131,7 @@ function chatbox({
       let ScoreText;
       if (oGscore !== null && oGscore !== undefined) {
         // add right arrow and OG score to the bot response
-        ScoreText = `${botResponse} \n => Your OG score is now: ${oGscore}`;
+        ScoreText = `${botResponse} \n\n=> Your OG score is now: ${oGscore}`;
       } else {
         ScoreText = botResponse;
       }

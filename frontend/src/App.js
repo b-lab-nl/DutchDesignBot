@@ -65,9 +65,9 @@ function App() {
       //
       // add a sleep timer here to simulate the user thinking
       //
+      setCanSubmitNewSolution(false);
       setBotResponse(`. . . . . . . . . .`);
       setTimeout(() => {
-        setCanSubmitNewSolution(false);
         var botResponseText = `Welcome, I am Aly. ${selectedChallenge}, what a great choice. What solutions \
           do you have in mind to solve some of the issues related to\
               ${selectedChallenge}?`;
@@ -92,13 +92,12 @@ function App() {
           .finally(() => {
             setIsLoading(false);
             setShowBottomCarousel(true);
-            setCanSubmitNewSolution(true);
           });
-      }, 2500);
+      }, 2700);
 
       setTimeout(() => {
         setCanSubmitNewSolution(true);
-      }, 3000);
+      }, 6000);
 
       setShowBottomCarousel(true);
     } else if (selectedChallenge && selectedSolution === "") {
