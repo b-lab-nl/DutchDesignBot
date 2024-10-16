@@ -64,7 +64,7 @@ function chatbox({
       ctx.font = "24px Inter";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillStyle = `rgba(0, 0, 0, ${opacity})`;
+      ctx.fillStyle = `rgba(0, 0, 0, 1)`;
       ctx.fillText(
         "Select your challenge",
         canvas.width / 2,
