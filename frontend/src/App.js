@@ -9,6 +9,161 @@ import ReactConfetti from "react-confetti";
 import "./App.css";
 import axios from "axios";
 
+const standard_answer_dict_lead = {
+  Inclusivity: {
+    "Blockchain voting":
+      "Ah, let’s see. We could use blockchain to enhance participation and reduce election fraud…",
+    "AI language translation":
+      "Ok. We could use AI language translation for real-time multilingual communication?",
+    "Digital twins":
+      "We can create digital twins to better simulate and design inclusive environments.",
+  },
+  Safety: {
+    "Biometric authentication":
+      "Ah, let’s see. We could use  fingerprint or facial recognition for secure access?",
+    "Smart drones":
+      "Ok. We could use automated surveillance to monitor sensitive areas…",
+    "Behavioral analytics":
+      "Mmm, what if we use AI to predict and prevent dangerous behavior?",
+  },
+  Healthcare: {
+    "AI drug discovery":
+      "Ah, let’s see. We can use machine learning to find potential treatments faster.",
+    Wearables:
+      "Ok. What if we use devices like smartwatches to monitor health conditions continuously?",
+    "Telemedicine robots":
+      "Sure, we could use remotely controlled robots for home visits.",
+  },
+  Housing: {
+    "AI for urban planning":
+      "Ah, let’s see. We can use AI to design better living spaces.",
+    "Floating modular homes":
+      "Ok. What if we use adaptable housing solutions for rising sea levels.",
+    "IoT-enabled smart homes":
+      "Sure, we could use optimizing energy and resource usage in houses.",
+  },
+  Energy: {
+    "AI-driven smart grid":
+      "Ah, let’s see. We can use optimized electricity distribution and reduce waste.",
+    "Blockchain energy trading":
+      "Ok. What if we set up decentralized peer-to-peer trading system of surplus energy.",
+    "Consumption monitoring":
+      "Sure, we could use IoT for households to optimize energy use.",
+  },
+  Water: {
+    "Renewable water purification":
+      "Ah, let’s see. We can use water purification technologies to make ocean water drinkable.",
+    "AI to predict water scarcity":
+      "Ok. What if we use data to forecast and manage water shortages.",
+    "Fog harvesting":
+      "Sure, we could start collecting water from the air in arid areas.",
+  },
+  Food: {
+    "AI precision agriculture":
+      "Ah, let’s see. We can use data to maximize crop yields and minimize waste.",
+    "Vertical farming":
+      "Ok. Sure, we can use empty office building as vertical farms",
+    "Lab grown protein":
+      "Sure, we could use creating new food proteins to meet demand.",
+  },
+};
+
+const standard_answer_dict_trail = {
+  Inclusivity: {
+    "Blockchain voting":
+      "I feel like I’ve heard that idea before. A lot of people have come up with the same thing. I think you can do better.",
+    "AI language translation":
+      "Pretty standard. Been here before. Try to be more creative!",
+    "Digital twins":
+      "I’ve heard that again and again. What about thinking of something unexpected?",
+  },
+  Safety: {
+    "Biometric authentication":
+      "I feel like I’ve heard that idea before. A lot of people have come up with the same thing. I think you can do better.",
+    "Smart drones":
+      "Pretty standard. Been here before. Try to be more creative!",
+    "Behavioral analytics":
+      "I’ve heard that again and again. What about thinking of something unexpected?",
+  },
+  Healthcare: {
+    "AI drug discovery":
+      "I feel like I’ve heard that idea before. A lot of people have come up with the same thing. I think you can do better.",
+    Wearables: "Pretty standard. Been here before. Try to be more creative!",
+    "Telemedicine robots":
+      "I’ve heard that again and again. What about thinking of something unexpected?",
+  },
+  Housing: {
+    "AI for urban planning":
+      "I feel like I’ve heard that idea before. A lot of people have come up with the same thing. I think you can do better",
+    "Floating modular homes":
+      "Pretty standard. Been here before. Try to be more creative!",
+    "IoT-enabled smart homes":
+      "I’ve heard that again and again. What about thinking of something unexpected?",
+  },
+  Energy: {
+    "AI-driven smart grid":
+      "I feel like I’ve heard that idea before. A lot of people have come up with the same thing. I think you can do better.",
+    "Blockchain energy trading":
+      "Pretty standard. Been here before. Try to be more creative!",
+    "Consumption monitoring":
+      "I’ve heard that again and again. What about thinking of something unexpected?",
+  },
+  Water: {
+    "Renewable water purification":
+      "I feel like I’ve heard that idea before. A lot of people have come up with the same thing. I think you can do better. ",
+    "AI to predict water scarcity":
+      "Pretty standard. Been here before. Try to be more creative!",
+    "Fog harvesting":
+      "I’ve heard that again and again. What about thinking of something unexpected?",
+  },
+  Food: {
+    "AI precision agriculture":
+      "I feel like I’ve heard that idea before. A lot of people have come up with the same thing. I think you can do better.",
+    "Vertical farming":
+      "Pretty standard. Been here before. Try to be more creative!",
+    "Lab grown protein":
+      "I’ve heard that again and again. What about thinking of something unexpected?",
+  },
+};
+
+const standard_answer_dict_og = {
+  Inclusivity: {
+    "Blockchain voting": 21,
+    "AI language translation": 5,
+    "Digital twins": 19,
+  },
+  Safety: {
+    "Biometric authentication": 8,
+    "Smart drones": 2,
+    "Behavioral analytics": 14,
+  },
+  Healthcare: {
+    "AI drug discovery": 46,
+    Wearables: 12,
+    "Telemedicine robots": 3,
+  },
+  Housing: {
+    "AI for urban planning": 11,
+    "Floating modular homes": 14,
+    "IoT-enabled smart homes": 17,
+  },
+  Energy: {
+    "AI-driven smart grid": 48,
+    "Blockchain energy trading": 49.5,
+    "Consumption monitoring": 12,
+  },
+  Water: {
+    "Renewable water purification": 16,
+    "AI to predict water scarcity": 35,
+    "Fog harvesting": 40,
+  },
+  Food: {
+    "AI precision agriculture": 12,
+    "Vertical farming": 25,
+    "Lab grown protein": 47,
+  },
+};
+
 const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:1232";
 const INACTIVITY_TIMEOUT = 60_000; // 30 seconds in milliseconds
 
@@ -119,7 +274,11 @@ function App() {
       setShowBottomCarousel(true);
     } else if (selectedChallenge && selectedSolution === "") {
       setBotResponse("Be creative and get a super originality score");
-    } else if (selectedChallenge && selectedSolution !== "") {
+    } else if (
+      selectedChallenge &&
+      selectedSolution !== "" &&
+      preFilled === false
+    ) {
       // if selectedSolution===lastSelectedSolution, set isBored to true
 
       console.log("Making API call");
@@ -164,12 +323,60 @@ function App() {
           setIsLoading(false);
           setShowBottomCarousel(true);
         });
+    } else if (
+      selectedChallenge &&
+      selectedSolution !== "" &&
+      preFilled === true
+    ) {
+      const leadResponse =
+        standard_answer_dict_lead[selectedChallenge][selectedSolution];
+      const trailResponse =
+        standard_answer_dict_trail[selectedChallenge][selectedSolution];
+      const botResponseText = `${leadResponse} \n ${trailResponse}`;
+
+      setIsLoading(true);
+      setBotResponse("");
+      setCanSubmitNewSolution(false);
+
+      setTimeout(() => {
+        // Send to API for sound generation
+        const textSnippet = {
+          textsnippet: botResponseText,
+          positive: true,
+        };
+        axios
+          .post(`${backendUrl}/api/sound`, textSnippet)
+          .then((response) => {
+            const audioBase64 = response.data.audio_base64;
+            const audioURL = `data:audio/mpeg;base64,${audioBase64}`;
+            setAudioSrc(audioURL);
+
+            const audio = new Audio(audioURL);
+            audio.play();
+
+            // pre-selected so boring
+            setTimeout(() => {
+              audioBoring.play();
+              setIsBored(true);
+            }, 9000);
+            // set og score
+            setOGscore(
+              standard_answer_dict_og[selectedChallenge][selectedSolution],
+            );
+            setBotResponse(botResponseText);
+          })
+          .catch((error) => console.error("Error:", error))
+          .finally(() => {
+            setIsLoading(false);
+            setShowBottomCarousel(true);
+          });
+      }, 2700);
     }
   }, [selectedChallenge, selectedSolution, preFilled, attemptNumber]);
 
   setTimeout(() => {
     setCanSubmitNewSolution(true);
-  }, 11000);
+  }, 15000);
 
   useEffect(() => {
     makeApiCall();

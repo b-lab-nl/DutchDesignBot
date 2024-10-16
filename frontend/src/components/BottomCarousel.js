@@ -3,13 +3,29 @@ import SolutionSelection from "./SolutionSelection";
 import "./BottomCarousel.css";
 
 const base_solutions_dict = {
-  Inclusivity: ["Blockchain", "AI", "Digital accessibility tools"],
-  Safety: ["Cybersecurity", "AI", "Smart surveillance"],
-  Healthcare: ["Remote monitoring", "AI", "3D printing"],
-  Housing: ["3D printing", "Smart building materials", "Modular construction"],
-  Energy: ["3D printing", "Renewable energy", "AI"],
-  Water: ["Lab-grown", "Vertical farming", "AI agriculture"],
-  Food: ["AI", "Blockchain", "Vertical farming"],
+  Inclusivity: [
+    "Blockchain voting",
+    "AI language translation",
+    "Digital twins",
+  ],
+  Safety: ["Biometric authentication", "Smart drones", "Behaviorial analytics"],
+  Healthcare: ["AI drug discovery", "Wearables", "Telemedicine robots"],
+  Housing: [
+    "AI for urban planning",
+    "Floating modular homes",
+    "IoT-enabled smart homes",
+  ],
+  Energy: [
+    "AI-driven smart grid",
+    "Blockchain energy trading",
+    "Consumption monitoring",
+  ],
+  Water: [
+    "Renewable water purification",
+    "AI to predict water scarcity",
+    "Fog harvesting",
+  ],
+  Food: ["AI precision agriculture", "Vertical farming", "Lab grown protein"],
 };
 
 // TODO: make a chat layout, where the response of the bot is displayed in a chat bubble, as if coming from a bot named ELIZA, and the user's input is displayed in a chat bubble as if coming from a user named HUMAN, the human response is the selectedSolution, and the selectedChallenge
