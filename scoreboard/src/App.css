@@ -14,7 +14,7 @@ body {
     align-items: center;
     height: 100vh;
     overflow: hidden;
-    
+
 }
 
 /* Video Background Styles */
@@ -58,9 +58,12 @@ body {
 
 .scoreboard.party {
     background-color: #a2b0fe;
-    max-width: 75%;
-    max-height: 75%;
+    width: 80%;
+    height: 90%;
     transition: background-color 0.3s ease;
+    background-image: url(../public/assets/scoreboardbg.svg);
+    background-size: contain;
+    background-repeat: no-repeat;
 }
 
 h1 {
