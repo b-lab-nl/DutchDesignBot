@@ -136,7 +136,7 @@ def evaluate(request: EvaluationRequest):
     originality, ogscore = check_originality(request.solution, request.pre_filled)
 
     # Generate bot response
-    if request.pre_filled or not originality:
+    if (request.pre_filled) or (not originality):
         try:
             bot_response = generate_sarcastic_response(request.challenge, request.solution)
         except Exception as e:

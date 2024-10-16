@@ -269,7 +269,7 @@ function App() {
 
       setTimeout(() => {
         setCanSubmitNewSolution(true);
-      }, 10000);
+      }, 10_000);
 
       setShowBottomCarousel(true);
     } else if (selectedChallenge && selectedSolution === "") {
@@ -315,7 +315,7 @@ function App() {
               audioOG.play();
               setVictory(true);
               audioVictory.play();
-            }, 17000);
+            }, 15000);
           }
         })
         .catch((error) => console.error("Error:", error))
@@ -337,6 +337,14 @@ function App() {
       setIsLoading(true);
       setBotResponse("");
       setCanSubmitNewSolution(false);
+
+      const apiPayload = {
+        challenge: selectedChallenge,
+        solution: selectedSolution || "",
+        pre_filled: preFilled,
+        attempt_number: attemptNumber,
+      };
+      axios.post(`${backendUrl}/api/evaluate`, apiPayload);
 
       setTimeout(() => {
         // Send to API for sound generation
