@@ -14,6 +14,7 @@ body {
     align-items: center;
     height: 100vh;
     overflow: hidden;
+    
 }
 
 /* Video Background Styles */
@@ -24,7 +25,8 @@ body {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    z-index: 0; /* Ensure it's behind other content */
+    z-index: 0;
+    /* Ensure it's behind other content */
 }
 
 .video-background video {
@@ -42,12 +44,16 @@ body {
 /* Existing Styles */
 .scoreboard {
     /* border: 2px solid #00ff00; */
-    padding: 20px;
-    max-width: 1200px;
-    max-height: 2100px;
+    /* padding: 20px; */
+    width: 80%;
+    height: 90%;
     z-index: 10;
     background-color: #2bb673;
     transition: background-color 0.3s ease;
+    background-image: url(../public/assets/scoreboardbg.svg);
+    background-size: contain;
+    background-repeat: no-repeat;
+
 }
 
 .scoreboard.party {
@@ -70,7 +76,7 @@ h1 {
     /* margin-top: 150px; */
     font-family: "Inter";
     font-weight: 400;
-    font-size: 75px;
+    font-size: 60px;
     padding-bottom: 90px;
 }
 
@@ -90,7 +96,7 @@ h1 {
 
 .score-item span {
     font-family: "Space Grotesk";
-    font-size: 25px;
+    font-size: 42px;
     /* font-weight: bold; */
 }
 
@@ -98,8 +104,10 @@ h1 {
 .score-bot {
     margin-top: 10px;
     font-family: Inter;
-    font-size: calc(8vw + 1rem); /* scales based on viewport */
-    white-space: nowrap; /* prevent wrapping */
+    font-size: calc(10vw + 1rem);
+    /* scales based on viewport */
+    white-space: nowrap;
+    /* prevent wrapping */
 }
 
 .error {
