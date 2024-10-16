@@ -24,8 +24,8 @@ function chatbox({
 
     const drawArrow = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const arrowHeight = 50; // height of the arrow
-      const arrowWidth = 20; // width of the arrow
+      const arrowHeight = 10; // height of the arrow
+      const arrowWidth = 10; // width of the arrow
 
       // Coordinates for the arrow tip
       const arrowTipX = canvas.width / 2;
@@ -46,10 +46,11 @@ function chatbox({
 
       // Draw the arrow's vertical line (shaft)
       ctx.moveTo(arrowTipX, arrowTipY + arrowHeight);
-      ctx.lineTo(arrowTipX, arrowTipY + arrowHeight + 40); // 40 is the length of the shaft
+      ctx.lineTo(arrowTipX, arrowTipY + arrowHeight + 20); // 40 is the length of the shaft
 
-      ctx.strokeStyle = `rgba(0, 0, 0, ${opacity})`; // Set color and opacity
-      ctx.lineWidth = 5; // Set the arrow thickness
+      ctx.strokeStyle = `rgba(0, 0, 0, 0)`; // Set color and opacity
+      // ctx.fill()
+      ctx.lineWidth = 2; // Set the arrow thickness
       ctx.stroke();
       if (fadingIn) {
         opacity += 0.02;
@@ -61,14 +62,14 @@ function chatbox({
     };
 
     const drawText = () => {
-      ctx.font = "24px Inter";
+      ctx.font = "16px Inter";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillStyle = `rgba(0, 0, 0, ${opacity})`;
+      ctx.fillStyle = `rgba(0, 0, 0, 1)`;
       ctx.fillText(
-        "Select your challenge",
+        "PICK A QUEST TO START ⬆",
         canvas.width / 2,
-        canvas.height / 2 - 50,
+        canvas.height / 2 - 150,
       );
 
       if (fadingIn) {

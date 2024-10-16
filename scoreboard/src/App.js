@@ -122,10 +122,10 @@ const App = () => {
     return () => clearInterval(intervalId);
   }, []);
 
-  // Handle video end event
-  const handleVideoEnd = () => {
-    setShowVideoBackground(false);
-  };
+  // // Handle video end event
+  // const handleVideoEnd = () => {
+  //   setShowVideoBackground(false);
+  // };
 
   return (
     <div className="App">
@@ -136,7 +136,7 @@ const App = () => {
             ref={videoRef}
             muted
             autoPlay
-            onEnded={handleVideoEnd}
+            loop
           >
             <source src="assets/video.mp4" type="video/mp4" />
             {/* Add additional sources if needed */}

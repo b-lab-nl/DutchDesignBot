@@ -24,12 +24,13 @@
     background-color: #ffffff;
     padding: 10px 20px;
     text-transform: uppercase;
-    animation: flicker 0.5s infinite alternate;
+    border: 3px solid black
+    /* animation: flicker 0.5s infinite alternate; */
 }
 
 .challengeText:hover {
     animation-play-state: paused;
-    background-color: #ffffff;
+    background-color: #8f70f7;
 }
 
 .carousel-item {
@@ -52,7 +53,7 @@
     transform: scale(1.1);
     border-color: #8f70f7;
     border-width: 5px;
-    text-shadow: 0 0 10px #ffffff;
+    /* text-shadow: 0 0 10px #ffffff; */
 }
 
 .carousel-item.selected .challengeText {

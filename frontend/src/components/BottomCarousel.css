@@ -59,7 +59,7 @@
 .carousel-item-bottom:focus {
     background-color: #d9ffa1;
     transform: scale(1.1);
-    text-shadow: 0 0 10px #000000;
+    /* text-shadow: 0 0 10px #000000; */
     outline: none;
     /* Remove default focus outline */
 }

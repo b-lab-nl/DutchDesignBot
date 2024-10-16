@@ -1,22 +1,25 @@
 /* App.css */
 
 body {
-    cursor:
-        url("../public/assets/wolkjecursor.png") 57 60,
-        auto;
 }
 
 .App {
-    background-color: #2bb673;
-    color: #000000;
-    font-family: "Inter", "Lora", monospace;
-    text-align: center;
-    height: 100vh;
-    overflow: hidden;
-    transition: background-color 0.4s ease-in-out 0.4s;
-}
-
-.App.manual-input-active {
+    cursor:
+        url("../public/assets/wolkjecursor.png") 57 60,
+        auto;
+        background-color: #2bb673;
+        color: #000000;
+        font-family: "Inter", "Lora", monospace;
+        text-align: center;
+        height: 100vh;
+        overflow: hidden;
+        transition: background-color 0.4s ease-in-out 0.4s;
+    }
+    
+    .App.manual-input-active {
+    cursor:
+        url("../public/assets/wolkjecursorblij.png") 57 60,
+        auto;
     background-color: #a2b0fe;
     transition: background-color 0.4s ease-in-out 0.4s;
 }

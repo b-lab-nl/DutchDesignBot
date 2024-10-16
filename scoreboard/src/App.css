@@ -62,6 +62,18 @@ h1 {
     margin-bottom: 200px;
 }
 
+.scoreboard h1 {
+    /* width: 100%; */
+    padding-inline: 120px;
+    align-items: center;
+    text-transform: uppercase;
+    /* margin-top: 150px; */
+    font-family: "Inter";
+    font-weight: 400;
+    font-size: 75px;
+    padding-bottom: 90px;
+}
+
 .scores {
     display: flex;
     flex-direction: column;
@@ -78,8 +90,8 @@ h1 {
 
 .score-item span {
     font-family: "Space Grotesk";
-    font-size: 50px;
-    font-weight: bold;
+    font-size: 25px;
+    /* font-weight: bold; */
 }
 
 .score-human,
