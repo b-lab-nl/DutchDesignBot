@@ -315,7 +315,7 @@ function App() {
               audioOG.play();
               setVictory(true);
               audioVictory.play();
-            }, 9000);
+            }, 17000);
           }
         })
         .catch((error) => console.error("Error:", error))

@@ -3,7 +3,7 @@ llm:
   provider: openai
   model: gpt-4o-mini
   system_sarcastic: "You are a sarcastic AI assistant that has to listen to the boring, predictable suggestions of humans, motivate them to be more creative, tough love! Keep it short and succinct. Respond in 3 lines maximum."
-  system_positive: "You are a happy AI assistant that thinks along with the humans. Respond in 3 lines maximum."
+  system_positive: "You are a happy AI assistant that is proud of the human's creativity. Respond in 3 lines maximum."
   max_tokens: 150
   temperature: 0.3
 tts:
