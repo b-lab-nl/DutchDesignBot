@@ -65,7 +65,7 @@ function chatbox({
       ctx.font = "16px Inter";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillStyle = `rgba(0, 0, 0, 1)`;
+      ctx.fillStyle = `rgba(0, 0, 0, 0)`;
       ctx.fillText(
         "PICK A QUEST TO START ⬆",
         canvas.width / 2,

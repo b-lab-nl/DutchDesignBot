@@ -5,7 +5,7 @@ import './TopCarousel.css';
 
 const challenges = [
   'Inclusivity',
-  'Safety', 
+  'Safety',
   'Healthcare',
   'Housing',
   'Energy',
@@ -27,6 +27,7 @@ function TopCarousel({ selectedChallenge, setSelectedChallenge }) {
           </div>
         ))}
       </div>
+      <div className="carousel-cta-text">Pick a quest to start ⬆</div>
     </div>
   );
 }
