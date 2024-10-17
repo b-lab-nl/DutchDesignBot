@@ -43,13 +43,14 @@ body {
 /* Existing Styles */
 .scoreboard {
     /* border: 2px solid #00ff00; */
+    margin-top: 600px;
     padding: 20px;
     /* max-width: 1200px; */
     /* max-height: 2100px; */
-    width: 75%;
-    height: 75%;
+    width: 100%;
+    height: 100%;
     z-index: 10;
-    background-color: #2bb673;
+    background-color: #2bb67300;
     transition: background-color 0.3s ease;
     background-image: url(../public/assets/scoreboardbg.svg);
     background-size: contain;
@@ -58,8 +59,8 @@ body {
 
 .scoreboard.party {
     background-color: #a2b0fe;
-    width: 75%;
-    height: 75%;
+    width: 100%;
+    height: 100%;
     transition: background-color 0.3s ease;
 }
 
@@ -81,6 +82,7 @@ h1 {
 }
 
 .scores {
+    margin-top: 200px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -102,10 +104,11 @@ h1 {
 
 .score-human,
 .score-bot {
-    margin-top: 10px;
+    /* margin-top: 10px; */
     font-family: Inter;
-    font-size: calc(8vw + 1rem);
     /* scales based on viewport */
+    /* font-size: calc(12vw + 1rem); */
+    font-size: 160px;
     white-space: nowrap;
     /* prevent wrapping */
 }

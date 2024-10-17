@@ -146,7 +146,7 @@ const App = () => {
       {showHumanEmojis && <EmojiRain type="human" />}
       {showBotEmojis && <EmojiRain type="bot" />}
       <div className={`scoreboard ${showHumanEmojis ? "party" : ""}`}>
-        <h1>Let's save the world with tech</h1>
+        {/* <h1>Let's save the world with tech</h1> */}
         {loading && <p>Loading scores...</p>}
         {error && <p className="error">{error}</p>}
         <div className="scores">
