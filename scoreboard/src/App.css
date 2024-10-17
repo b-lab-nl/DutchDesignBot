@@ -46,8 +46,8 @@ body {
     padding: 20px;
     /* max-width: 1200px; */
     /* max-height: 2100px; */
-    width: 80%;
-    height: 80%;
+    max-width: 75%;
+    max-height: 75%;
     z-index: 10;
     background-color: #2bb673;
     transition: background-color 0.3s ease;
