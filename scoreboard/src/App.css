@@ -46,8 +46,8 @@ body {
     padding: 20px;
     /* max-width: 1200px; */
     /* max-height: 2100px; */
-    max-width: 75%;
-    max-height: 75%;
+    width: 75%;
+    height: 75%;
     z-index: 10;
     background-color: #2bb673;
     transition: background-color 0.3s ease;
@@ -55,8 +55,8 @@ body {
 
 .scoreboard.party {
     background-color: #a2b0fe;
-    max-width: 75%;
-    max-height: 75%;
+    width: 75%;
+    height: 75%;
     transition: background-color 0.3s ease;
 }
 
