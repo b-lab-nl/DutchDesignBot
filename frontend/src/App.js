@@ -269,7 +269,7 @@ function App() {
 
       setTimeout(() => {
         setCanSubmitNewSolution(true);
-      }, 10_000);
+      }, 12_000);
 
       setShowBottomCarousel(true);
     } else if (selectedChallenge && selectedSolution === "") {
