@@ -273,7 +273,7 @@ function App() {
 
       setShowBottomCarousel(true);
     } else if (selectedChallenge && selectedSolution === "") {
-      setBotResponse("Be creative and get a super originality score");
+      setBotResponse("Ah, you have an original idea to solve the issues related to " + selectedChallenge + "?! Let's hear it!");
     } else if (
       selectedChallenge &&
       selectedSolution !== "" &&
