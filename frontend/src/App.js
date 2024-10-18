@@ -457,7 +457,7 @@ function App() {
       {/* Victory Message */}
       {victory && (
         <>
-          <div className="victory-message">You are a genius!</div>
+          <div className="victory-message">You win. Creative genius!</div>
           <ReactConfetti />
         </>
       )}
