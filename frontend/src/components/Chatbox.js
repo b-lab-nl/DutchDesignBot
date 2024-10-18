@@ -205,7 +205,7 @@ function chatbox({
   useEffect(() => {
     if (botResponse) {
       let ScoreText;
-      if (oGscore !== null && oGscore !== undefined && (selectedSolution !== "")) {
+      if (oGscore !== null && oGscore !== undefined) {
         // add right arrow and OG score to the bot response
         ScoreText = `${botResponse} \n\nOriginality score: ${oGscore}% \nAttempt number: ${attemptNumber}`;
       } else {
