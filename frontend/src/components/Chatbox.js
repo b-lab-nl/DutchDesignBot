@@ -203,6 +203,7 @@ function chatbox({
   }
 
   useEffect(() => {
+    console.log("oGscore: ", botResponse);
     if (botResponse) {
       let ScoreText;
       if (oGscore !== null && oGscore !== undefined) {
