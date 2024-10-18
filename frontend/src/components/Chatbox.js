@@ -8,7 +8,6 @@ function chatbox({
   oGscore,
   attemptNumber,
   isLoading,
-  victory,
 }) {
   const canvasRef = useRef(null);
   const [canvasContext, setCanvasContext] = useState(null);
@@ -204,10 +203,9 @@ function chatbox({
   }
 
   useEffect(() => {
-    console.log("victory: ", victory);
     if (botResponse) {
       let ScoreText;
-      if (oGscore !== null && oGscore !== undefined) {
+      if (oGscore !== null && oGscore !== undefined && (selectedSolution !== "")) {
         // add right arrow and OG score to the bot response
         ScoreText = `${botResponse} \n\nOriginality score: ${oGscore}% \nAttempt number: ${attemptNumber}`;
       } else {
