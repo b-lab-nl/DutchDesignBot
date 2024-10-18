@@ -428,6 +428,7 @@ function App() {
       )}
       <div className="topSeparator"> </div>
       <Chatbox
+        victory={victory}
         selectedChallenge={selectedChallenge}
         selectedSolution={selectedSolution}
         botResponse={botResponse}
