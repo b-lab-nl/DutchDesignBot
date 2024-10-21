@@ -46,7 +46,9 @@ ElevenClient = ElevenLabs(api_key=os.getenv('STT_EL_KEY'))  # Get ElevenLabs API
 # Configure CORS
 origins = [
      "https://dutchdesignbot-ux.netlify.app", # "http://localhost:3000",  # Frontend origin
-     "https://dutchdesignbot-scoreboard.netlify.app" #"http://localhost:4000"  # Scoreboard origin
+     "https://dutchdesignbot-scoreboard.netlify.app", #"http://localhost:4000"  # Scoreboard origin
+     "https://devbranch--dutchdesignbot-scoreboard.netlify.app",
+     "https://devbranch--dutchdesignbot-ux.netlify.app"
 ]
 
 app = FastAPI()
@@ -133,7 +135,7 @@ def evaluate(request: EvaluationRequest):
     logger.info(f"Received request: {request}")
 
     # Determine originality
-    originality, ogscore = check_originality(request.solution, request.pre_filled)
+    originality, ogscore = check_originality(request.solution, request.challenge, request.pre_filled)
 
     # Generate bot response
     if (request.pre_filled) or (not originality):
@@ -198,13 +200,18 @@ async def sound(request: SoundRequest):
     audio_base64 = generate_audio(request.textsnippet)
     return {'audio_base64': audio_base64}
 
-def check_originality(solution: str, pre_filled: bool)->Tuple[bool,int]:
+def check_originality(solution: str, challenge:str, pre_filled: bool)->Tuple[bool,int]:
     # Check for previous solutions in the database
     if pre_filled:
         return False, np.random.randint(10, 30)
 
     # perform exact matching
-    cursor.execute('SELECT DISTINCT(solution) FROM answers')
+    try:
+        cursor.execute(f'SELECT DISTINCT(solution) FROM answers WHERE challenge={challenge}')
+    except Exception as e:
+        cursor.execute('SELECT DISTINCT(solution) FROM answers')
+        logger.error(f"Error in checking originality: {e}")
+
     previous_solutions = [row[0].lower() for row in cursor.fetchall()]
     if solution.lower() in previous_solutions:
         return False, np.random.randint(20, 50)

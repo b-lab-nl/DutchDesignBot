@@ -273,7 +273,11 @@ function App() {
 
       setShowBottomCarousel(true);
     } else if (selectedChallenge && selectedSolution === "") {
-      setBotResponse("Ah, you have an original idea to solve the issues related to " + selectedChallenge + "?! Let's hear it!");
+      setBotResponse(
+        "Ah, you have an original idea to solve the issues related to " +
+          selectedChallenge +
+          "?! Let's hear it!",
+      );
     } else if (
       selectedChallenge &&
       selectedSolution !== "" &&
@@ -408,7 +412,9 @@ function App() {
         setTimeout(() => setIsBored(false), 3000); // Reset bored state after 3 seconds
       } else {
         setSelectedSolution(solution);
-        setAttemptNumber((prev) => prev + 1);
+        if (solution !== "") {
+          setAttemptNumber((prev) => prev + 1);
+        }
         setLastSelectedSolution(solution);
         setIsBored(false);
       }
