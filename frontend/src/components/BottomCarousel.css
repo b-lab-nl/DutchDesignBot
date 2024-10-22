@@ -4,7 +4,6 @@
     width: 100%;
     display: flex;
     justify-content: center;
-    cursor: pointer;
 }
 
 .bottom-carousel {
@@ -20,6 +19,7 @@
 .bottom-carousel.active {
     display: block;
     transition: background-color 0.6s ease-in-out 0.5s;
+    cursor: pointer;
 }
 
 /* .bottom-carousel.active.manual-input-active {
