@@ -265,7 +265,7 @@ function App() {
             setIsLoading(false);
             setShowBottomCarousel(true);
           });
-      }, 2700);
+      }, 2000);
 
       setTimeout(() => {
         setCanSubmitNewSolution(true);
